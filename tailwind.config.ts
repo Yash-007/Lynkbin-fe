@@ -25,6 +25,8 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          light: "hsl(var(--primary-light))",
+          dark: "hsl(var(--primary-dark))",
           glow: "hsl(var(--primary-glow))",
         },
         secondary: {
@@ -43,6 +45,13 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
           blue: "hsl(var(--accent-blue))",
+        },
+        platform: {
+          linkedin: "hsl(var(--accent-blue))",
+          twitter: "hsl(var(--accent-twitter))",
+          reddit: "hsl(var(--accent-reddit))",
+          instagram: "hsl(var(--accent-instagram))",
+          facebook: "hsl(var(--accent-facebook))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
