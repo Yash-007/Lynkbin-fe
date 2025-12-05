@@ -159,7 +159,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                  LinkyVault
+                  LynkBin
                 </h1>
                 <p className="text-[10px] text-muted-foreground -mt-0.5">Your Knowledge Hub</p>
               </div>
@@ -179,6 +179,16 @@ const Dashboard = () => {
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Link
+              </Button>
+              <Button 
+                onClick={() => navigate("/profile")}
+                variant="ghost"
+                size="icon"
+                className="hover:bg-muted/50"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
               </Button>
             </div>
           </div>

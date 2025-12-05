@@ -22,15 +22,27 @@ const Index = () => {
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/20 to-transparent opacity-40"></div>
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                LinkyVault
+                LynkBin
               </span>
             </div>
-            <Button
-              onClick={() => navigate("/dashboard")}
-              className="bg-primary hover:bg-primary/90 shadow-blur"
-            >
-              Get Started
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => navigate("/dashboard")}
+                className="bg-primary hover:bg-primary/90 shadow-blur"
+              >
+                Get Started
+              </Button>
+              <Button 
+                onClick={() => navigate("/profile")}
+                variant="ghost"
+                size="icon"
+                className="hidden md:flex hover:bg-muted/50"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
