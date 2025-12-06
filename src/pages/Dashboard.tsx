@@ -649,6 +649,7 @@ const LinkCard = ({ link }: { link: LinkItem }) => {
       <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-5 transition-opacity duration-300" />
       
       <div className="relative z-10">
+        {/* Platform badge and external link button */}
         <div className="flex items-start justify-between mb-3">
           <Badge 
             variant="secondary" 
@@ -670,20 +671,24 @@ const LinkCard = ({ link }: { link: LinkItem }) => {
           </Button>
         </div>
 
-        <h3 className="font-semibold text-base mb-2 text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-          {link.title}
-        </h3>
-
-        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-          {link.description}
-        </p>
-
+        {/* Author and Date at the top */}
         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
           <span className="font-medium">{link.author}</span>
           <span>•</span>
           <span>{formatDate(link.savedAt)}</span>
         </div>
 
+        {/* Title */}
+        <h3 className="font-semibold text-base mb-2 text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+          {link.title}
+        </h3>
+
+        {/* Description */}
+        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+          {link.description}
+        </p>
+
+        {/* Tags at the bottom */}
         <div className="flex flex-wrap gap-1.5">
           {link.tags.map((tag) => (
             <Badge 

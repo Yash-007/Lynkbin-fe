@@ -93,28 +93,33 @@ const LinkCard = ({ link }: { link: LinkItem }) => (
     rel="noopener noreferrer"
     className="group block p-4 rounded-xl bg-card/50 border border-border/50 backdrop-blur-xl hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
   >
-    <div className="flex items-start justify-between gap-3 mb-3">
+    {/* Author and Date at the top */}
+    <div className="flex items-center gap-2 mb-3">
+      <span className="text-xs font-medium text-muted-foreground">{link.author}</span>
+      <span className="text-muted-foreground/50">•</span>
+      <span className="text-xs text-muted-foreground">{formatDate(link.savedAt)}</span>
+    </div>
+
+    {/* Title */}
+    <div className="flex items-start justify-between gap-3 mb-2">
       <h3 className="font-medium text-foreground line-clamp-2 group-hover:text-primary transition-colors">
         {link.title}
       </h3>
       <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
     </div>
+
+    {/* Description */}
     <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
       {link.description}
     </p>
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-muted-foreground">{link.author}</span>
-        <span className="text-muted-foreground/50">•</span>
-        <span className="text-xs text-muted-foreground">{formatDate(link.savedAt)}</span>
-      </div>
-      <div className="flex items-center gap-1">
-        {link.tags.slice(0, 2).map((tag) => (
-          <Badge key={tag} variant="secondary" className="bg-muted/50 text-[10px] px-1.5 py-0">
-            {tag}
-          </Badge>
-        ))}
-      </div>
+
+    {/* Tags at the bottom */}
+    <div className="flex items-center gap-1">
+      {link.tags.slice(0, 2).map((tag) => (
+        <Badge key={tag} variant="secondary" className="bg-muted/50 text-[10px] px-1.5 py-0">
+          {tag}
+        </Badge>
+      ))}
     </div>
   </a>
 );
@@ -161,6 +166,11 @@ const Categories = () => {
       toast.error(error);
     }
   }, [error]);
+
+  // Handler for platform change from mobile nav
+  const handlePlatformChange = (platform: string) => {
+    dispatch(setSelectedPlatform(platform));
+  };
 
   // Filter by category (all posts for the platform, no Dashboard filters)
   const filteredLinks = links.filter((link) => {
@@ -302,7 +312,7 @@ const Categories = () => {
       </main>
 
       {/* Mobile Bottom Nav */}
-      <MobileBottomNav activeTab={selectedPlatform} onTabChange={(platform) => setSelectedPlatform(platform as Platform)} />
+      <MobileBottomNav activeTab={selectedPlatform} onTabChange={handlePlatformChange} />
     </div>
   );
 };
