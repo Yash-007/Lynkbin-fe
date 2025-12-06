@@ -7,146 +7,77 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useNavigate } from "react-router-dom";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { cn } from "@/lib/utils";
-
-interface LinkItem {
-  id: string;
-  title: string;
-  url: string;
-  description: string;
-  author: string;
-  platform: "linkedin" | "twitter" | "reddit" | "instagram" | "facebook";
-  tags: string[];
-  category: string;
-  savedAt: string;
-}
-
-const mockLinks: LinkItem[] = [
-  {
-    id: "1",
-    title: "The Future of AI in Product Design",
-    url: "https://linkedin.com/pulse/future-ai-design",
-    description: "Exploring how artificial intelligence is revolutionizing the way we approach product design and user experience.",
-    author: "Sarah Chen",
-    platform: "linkedin",
-    tags: ["AI", "Design"],
-    category: "Design",
-    savedAt: "2024-01-15",
-  },
-  {
-    id: "2",
-    title: "Building Scalable Microservices",
-    url: "https://linkedin.com/pulse/microservices-arch",
-    description: "Best practices for designing and implementing microservices architecture in modern applications.",
-    author: "Mike Johnson",
-    platform: "linkedin",
-    tags: ["Architecture", "Backend"],
-    category: "Engineering",
-    savedAt: "2024-01-14",
-  },
-  {
-    id: "3",
-    title: "10 Tips for Better React Performance",
-    url: "https://twitter.com/dev/status/123",
-    description: "Essential optimization techniques every React developer should know to build faster applications.",
-    author: "@devexpert",
-    platform: "twitter",
-    tags: ["React", "Performance"],
-    category: "Development",
-    savedAt: "2024-01-14",
-  },
-  {
-    id: "4",
-    title: "The State of Web3 in 2024",
-    url: "https://twitter.com/crypto/status/456",
-    description: "Analysis of current trends and future predictions for blockchain and decentralized technologies.",
-    author: "@web3insights",
-    platform: "twitter",
-    tags: ["Web3", "Blockchain"],
-    category: "Technology",
-    savedAt: "2024-01-13",
-  },
-  {
-    id: "5",
-    title: "Leadership Lessons from Tech Giants",
-    url: "https://linkedin.com/pulse/leadership-tech",
-    description: "Key takeaways from successful leaders in the technology industry.",
-    author: "Emma Davis",
-    platform: "linkedin",
-    tags: ["Leadership", "Career"],
-    category: "Business",
-    savedAt: "2024-01-12",
-  },
-  {
-    id: "6",
-    title: "CSS Grid vs Flexbox: When to Use What",
-    url: "https://twitter.com/css/status/789",
-    description: "Practical guide to choosing between CSS Grid and Flexbox for your layouts.",
-    author: "@csswizard",
-    platform: "twitter",
-    tags: ["CSS", "WebDev"],
-    category: "Development",
-    savedAt: "2024-01-11",
-  },
-];
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { 
+  fetchLinksByPlatform, 
+  fetchAuthors, 
+  fetchTags,
+  setSelectedPlatform, 
+  toggleAuthor, 
+  toggleTag, 
+  clearFilters,
+  LinkItem 
+} from "@/store/slices/linksSlice";
+import { logout } from "@/store/slices/authSlice";
+import { toast } from "sonner";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState(() => {
-    return (localStorage.getItem("selectedPlatform") as string) || "linkedin";
-  });
-  const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  
+  // Redux state
+  const { 
+    items: links, 
+    selectedPlatform, 
+    selectedAuthors, 
+    selectedTags, 
+    availableAuthors, 
+    availableTags,
+    isLoading, 
+    error 
+  } = useAppSelector((state) => state.links);
+
+  // Local UI state
   const [authorOpen, setAuthorOpen] = useState(false);
   const [tagOpen, setTagOpen] = useState(false);
   const [showTelegramBanner, setShowTelegramBanner] = useState(() => {
     return localStorage.getItem("hideTelegramBanner") !== "true";
   });
-  const navigate = useNavigate();
 
   const dismissTelegramBanner = () => {
     setShowTelegramBanner(false);
     localStorage.setItem("hideTelegramBanner", "true");
   };
 
-  // Save selected platform to localStorage for Categories page
+  // Fetch data when component mounts or platform/filters change
   useEffect(() => {
-    localStorage.setItem("selectedPlatform", activeTab);
-  }, [activeTab]);
+    dispatch(fetchLinksByPlatform(selectedPlatform));
+    dispatch(fetchAuthors(selectedPlatform));
+    dispatch(fetchTags(selectedPlatform));
+  }, [dispatch, selectedPlatform, selectedAuthors, selectedTags]);
+
+  // Show error toast if API call fails
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    // Reset filters when switching platforms
-    setSelectedAuthors([]);
-    setSelectedTags([]);
+    dispatch(setSelectedPlatform(tab));
+    dispatch(clearFilters());
   };
 
-  const toggleAuthor = (author: string) => {
-    setSelectedAuthors(prev => 
-      prev.includes(author) 
-        ? prev.filter(a => a !== author)
-        : [...prev, author]
-    );
+  const handleToggleAuthor = (author: string) => {
+    dispatch(toggleAuthor(author));
   };
 
-  const toggleTag = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
-    );
+  const handleToggleTag = (tag: string) => {
+    dispatch(toggleTag(tag));
   };
 
-  // For platform view - filter by platform, author, and tag
-  const platformFilteredLinks = mockLinks.filter((link) => {
-    const matchesPlatform = link.platform === activeTab;
-    const matchesAuthor = selectedAuthors.length === 0 || selectedAuthors.includes(link.author);
-    const matchesTag = selectedTags.length === 0 || link.tags.some(tag => selectedTags.includes(tag));
-    return matchesPlatform && matchesAuthor && matchesTag;
-  });
-
-  // Get available authors and tags for current platform
-  const platformLinks = mockLinks.filter(link => link.platform === activeTab);
-  const availableAuthors = Array.from(new Set(platformLinks.map(link => link.author))).sort();
-  const availableTags = Array.from(new Set(platformLinks.flatMap(link => link.tags))).sort();
+  // Filtered links (client-side filtering on already filtered backend data)
+  const platformFilteredLinks = links;
 
 
   return (
@@ -262,7 +193,7 @@ const Dashboard = () => {
       <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Desktop - Platform Tabs */}
         <div className="hidden md:block">
-          <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
+          <Tabs value={selectedPlatform} onValueChange={handleTabChange} className="space-y-6">
               {/* Platform Tabs */}
               <div className="overflow-x-auto scrollbar-hide">
                 <TabsList className="bg-card/50 border border-border/50 backdrop-blur-xl p-1.5 shadow-blur inline-flex gap-1">
@@ -327,7 +258,7 @@ const Dashboard = () => {
                           {availableAuthors.map((author) => (
                             <button
                               key={author}
-                              onClick={() => toggleAuthor(author)}
+                              onClick={() => handleToggleAuthor(author)}
                               className="flex items-center w-full px-2 py-1.5 text-sm rounded hover:bg-accent hover:text-accent-foreground transition-colors"
                             >
                               <div className={cn(
@@ -370,7 +301,7 @@ const Dashboard = () => {
                           {availableTags.map((tag) => (
                             <button
                               key={tag}
-                              onClick={() => toggleTag(tag)}
+                              onClick={() => handleToggleTag(tag)}
                               className="flex items-center w-full px-2 py-1.5 text-sm rounded hover:bg-accent hover:text-accent-foreground transition-colors"
                             >
                               <div className={cn(
@@ -395,10 +326,7 @@ const Dashboard = () => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => {
-                          setSelectedAuthors([]);
-                          setSelectedTags([]);
-                        }}
+                        onClick={() => dispatch(clearFilters())}
                         className="h-9 px-3 text-muted-foreground hover:text-foreground"
                       >
                         <X className="h-4 w-4 mr-1" />
@@ -437,11 +365,16 @@ const Dashboard = () => {
 
                   {/* Links Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {platformFilteredLinks.length > 0 ? (
+                    {isLoading ? (
+                      <div className="col-span-full text-center py-12">
+                        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                        <p className="text-muted-foreground">Loading links...</p>
+                      </div>
+                    ) : platformFilteredLinks.length > 0 ? (
                       platformFilteredLinks.map((link) => <LinkCard key={link.id} link={link} />)
                     ) : (
                       <div className="col-span-full text-center py-12">
-                        <p className="text-muted-foreground">No links found</p>
+                        <p className="text-muted-foreground">No links found. Start by adding your first link!</p>
                       </div>
                     )}
                   </div>
@@ -454,7 +387,7 @@ const Dashboard = () => {
           <div className="md:hidden">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-foreground flex items-center gap-2.5 flex-1">
-                {activeTab === "linkedin" && (
+                {selectedPlatform === "linkedin" && (
                   <>
                     <div className="p-2 rounded-lg bg-gradient-to-br from-platform-linkedin/25 to-platform-linkedin/10">
                       <svg className="w-5 h-5 text-platform-linkedin" fill="currentColor" viewBox="0 0 24 24">
@@ -464,7 +397,7 @@ const Dashboard = () => {
                     <span>LinkedIn</span>
                   </>
                 )}
-                {activeTab === "twitter" && (
+                {selectedPlatform === "twitter" && (
                   <>
                     <div className="p-2 rounded-lg bg-gradient-to-br from-platform-twitter/25 to-platform-twitter/10">
                       <svg className="w-5 h-5 text-platform-twitter" fill="currentColor" viewBox="0 0 24 24">
@@ -474,7 +407,7 @@ const Dashboard = () => {
                     <span>X (Twitter)</span>
                   </>
                 )}
-                {activeTab === "reddit" && (
+                {selectedPlatform === "reddit" && (
                   <>
                     <div className="p-2 rounded-lg bg-gradient-to-br from-platform-reddit/25 to-platform-reddit/10">
                       <svg className="w-5 h-5 text-platform-reddit" fill="currentColor" viewBox="0 0 24 24">
@@ -484,7 +417,7 @@ const Dashboard = () => {
                     <span>Reddit</span>
                   </>
                 )}
-                {activeTab === "instagram" && (
+                {selectedPlatform === "instagram" && (
                   <>
                     <div className="p-2 rounded-lg bg-gradient-to-br from-platform-instagram/25 to-platform-instagram/10">
                       <svg className="w-5 h-5 text-platform-instagram" fill="currentColor" viewBox="0 0 24 24">
@@ -494,7 +427,7 @@ const Dashboard = () => {
                     <span>Instagram</span>
                   </>
                 )}
-                {activeTab === "facebook" && (
+                {selectedPlatform === "facebook" && (
                   <>
                     <div className="p-2 rounded-lg bg-gradient-to-br from-platform-facebook/25 to-platform-facebook/10">
                       <svg className="w-5 h-5 text-platform-facebook" fill="currentColor" viewBox="0 0 24 24">
@@ -616,7 +549,7 @@ const Dashboard = () => {
                       {author}
                       <X 
                         className="h-3 w-3 cursor-pointer hover:text-primary/70" 
-                        onClick={() => toggleAuthor(author)}
+                        onClick={() => handleToggleAuthor(author)}
                       />
                     </Badge>
                   ))}
@@ -629,7 +562,7 @@ const Dashboard = () => {
                       {tag}
                       <X 
                         className="h-3 w-3 cursor-pointer hover:text-primary/70" 
-                        onClick={() => toggleTag(tag)}
+                        onClick={() => handleToggleTag(tag)}
                       />
                     </Badge>
                   ))}
@@ -641,10 +574,7 @@ const Dashboard = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => {
-                    setSelectedAuthors([]);
-                    setSelectedTags([]);
-                  }}
+                  onClick={() => dispatch(clearFilters())}
                   className="text-muted-foreground hover:text-foreground"
                 >
                   <X className="h-4 w-4 mr-1" />
@@ -655,11 +585,16 @@ const Dashboard = () => {
 
             {/* Links Grid - Mobile */}
             <div className="grid grid-cols-1 gap-4">
-              {platformFilteredLinks.length > 0 ? (
+              {isLoading ? (
+                <div className="text-center py-12">
+                  <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <p className="text-muted-foreground">Loading links...</p>
+                </div>
+              ) : platformFilteredLinks.length > 0 ? (
                 platformFilteredLinks.map((link) => <LinkCard key={link.id} link={link} />)
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-muted-foreground">No links found</p>
+                  <p className="text-muted-foreground">No links found. Start by adding your first link!</p>
                 </div>
               )}
             </div>
@@ -667,7 +602,7 @@ const Dashboard = () => {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <MobileBottomNav activeTab={activeTab} onTabChange={handleTabChange} />
+      <MobileBottomNav activeTab={selectedPlatform} onTabChange={handleTabChange} />
     </div>
   );
 };

@@ -5,28 +5,38 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
-import { toast } from "@/hooks/use-toast";
+import { useAppDispatch } from "@/store/hooks";
+import { addLink } from "@/store/slices/linksSlice";
+import { toast } from "sonner";
 
 const PasteBin = () => {
   const [url, setUrl] = useState("");
   const [notes, setNotes] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!url.trim()) {
+      toast.error("Please enter a valid URL");
+      return;
+    }
+
     setIsProcessing(true);
 
-    setTimeout(() => {
-      setIsProcessing(false);
-      toast({
-        title: "Link saved successfully!",
-        description: "Your link has been added to your collection.",
-      });
+    try {
+      await dispatch(addLink(url)).unwrap();
+      toast.success("Link saved successfully! 🎉");
       setUrl("");
       setNotes("");
       navigate("/dashboard");
-    }, 1500);
+    } catch (error: any) {
+      toast.error(error || "Failed to save link. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (

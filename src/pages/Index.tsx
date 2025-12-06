@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Link as LinkIcon, Zap, Shield, Sparkles, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "@/store/hooks";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   return (
     <div className="min-h-screen bg-background">
@@ -26,22 +28,41 @@ const Index = () => {
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <Button
-                onClick={() => navigate("/dashboard")}
-                className="bg-primary hover:bg-primary/90 shadow-blur"
-              >
-                Get Started
-              </Button>
-              <Button 
-                onClick={() => navigate("/profile")}
-                variant="ghost"
-                size="icon"
-                className="hidden md:flex hover:bg-muted/50"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <Button
+                    onClick={() => navigate("/dashboard")}
+                    className="bg-primary hover:bg-primary/90 shadow-blur"
+                  >
+                    Dashboard
+                  </Button>
+                  <Button 
+                    onClick={() => navigate("/profile")}
+                    variant="ghost"
+                    size="icon"
+                    className="hidden md:flex hover:bg-muted/50"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    onClick={() => navigate("/auth")}
+                    variant="ghost"
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    onClick={() => navigate("/auth")}
+                    className="bg-primary hover:bg-primary/90 shadow-blur"
+                  >
+                    Get Started
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -70,10 +91,10 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <Button
               size="lg"
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate(isAuthenticated ? "/dashboard" : "/auth")}
               className="bg-primary hover:bg-primary/90 text-lg px-8 py-6 shadow-glow"
             >
-              Start Organizing Free
+              {isAuthenticated ? "Go to Dashboard" : "Start Organizing Free"}
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             <Button
