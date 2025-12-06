@@ -67,7 +67,7 @@ const Index = () => {
             searchable collection. Never lose valuable content again.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <Button
               size="lg"
               onClick={() => navigate("/dashboard")}
@@ -84,6 +84,35 @@ const Index = () => {
             >
               Try Paste Bin
             </Button>
+          </div>
+
+          {/* Telegram Bot CTA */}
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-gradient-to-br from-primary/10 via-accent-blue/10 to-primary/5 backdrop-blur-xl rounded-2xl p-6 border border-primary/30">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-[#0088cc] to-[#229ED9] flex items-center justify-center shadow-lg">
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                  </svg>
+                </div>
+                <div className="flex-1 text-left">
+                  <h3 className="text-lg font-bold text-foreground mb-1">Save Links via Telegram Bot</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Simply forward any link to our Telegram bot and it'll be automatically saved to your vault. Quick, easy, and always accessible!
+                  </p>
+                  <Button
+                    size="sm"
+                    className="bg-[#0088cc] hover:bg-[#0077b3] text-white shadow-md"
+                    onClick={() => window.open('https://t.me/lynkbin_bot', '_blank')}
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                    </svg>
+                    Open Telegram Bot
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -105,14 +134,21 @@ const Index = () => {
           </div>
 
           <div className="bg-card/30 backdrop-blur-xl rounded-2xl p-8 border border-border/50 shadow-blur hover:shadow-glow hover:border-primary/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-lg bg-accent-blue/10 flex items-center justify-center mb-4 border border-accent-blue/20">
-              <LinkIcon className="w-6 h-6 text-accent-blue" />
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-lg bg-accent-blue/10 flex items-center justify-center border border-accent-blue/20">
+                <LinkIcon className="w-6 h-6 text-accent-blue" />
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#0088cc]/10 flex items-center justify-center border border-[#0088cc]/20">
+                <svg className="w-5 h-5 text-[#0088cc]" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                </svg>
+              </div>
             </div>
             <h3 className="text-xl font-semibold mb-3 text-foreground">
               Multiple Save Options
             </h3>
             <p className="text-muted-foreground">
-              Save via browser extension, paste manually, or send through Telegram. 
+              Save via browser extension, paste manually, or send through Telegram bot. 
               Your choice, your workflow.
             </p>
           </div>

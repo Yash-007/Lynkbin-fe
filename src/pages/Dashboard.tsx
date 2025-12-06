@@ -97,7 +97,15 @@ const Dashboard = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [authorOpen, setAuthorOpen] = useState(false);
   const [tagOpen, setTagOpen] = useState(false);
+  const [showTelegramBanner, setShowTelegramBanner] = useState(() => {
+    return localStorage.getItem("hideTelegramBanner") !== "true";
+  });
   const navigate = useNavigate();
+
+  const dismissTelegramBanner = () => {
+    setShowTelegramBanner(false);
+    localStorage.setItem("hideTelegramBanner", "true");
+  };
 
   // Save selected platform to localStorage for Categories page
   useEffect(() => {
@@ -181,6 +189,16 @@ const Dashboard = () => {
                 Add Link
               </Button>
               <Button 
+                onClick={() => window.open('https://t.me/lynkbin_bot', '_blank')}
+                variant="outline"
+                className="bg-[#0088cc]/10 border-[#0088cc]/30 hover:bg-[#0088cc]/20 text-[#0088cc] backdrop-blur-xl"
+              >
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                </svg>
+                Telegram Bot
+              </Button>
+              <Button 
                 onClick={() => navigate("/profile")}
                 variant="ghost"
                 size="icon"
@@ -194,6 +212,52 @@ const Dashboard = () => {
           </div>
         </div>
       </header>
+
+      {/* Telegram Bot Info Banner */}
+      {showTelegramBanner && (
+        <div className="relative z-10 border-b border-border/50 bg-gradient-to-r from-[#0088cc]/5 via-primary/5 to-[#0088cc]/5">
+          <div className="container mx-auto px-4 py-3">
+            <div className="flex items-center justify-between gap-4">
+              <div onClick={() => window.open('https://t.me/lynkbin_bot', '_blank')} className="cursor-pointer flex items-center gap-3 flex-1">
+                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-[#0088cc] to-[#229ED9] flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                  </svg>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground">
+                    💡 Quick Tip: Save links instantly via Telegram
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Forward any link to @lynkbin_bot and it'll be saved to your vault
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => window.open('https://t.me/lynkbin_bot', '_blank')}
+                  className="bg-[#0088cc]/10 border-[#0088cc]/30 hover:bg-[#0088cc]/20 text-[#0088cc] hidden md:flex"
+                >
+                  <svg className="w-3.5 h-3.5 mr-1.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                  </svg>
+                  Try Bot
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={dismissTelegramBanner}
+                  className="hover:bg-muted/50"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Desktop - Platform Tabs */}
@@ -389,7 +453,7 @@ const Dashboard = () => {
         {/* Mobile - Platform Tabs */}
           <div className="md:hidden">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-foreground flex items-center gap-2.5">
+              <h2 className="text-lg font-semibold text-foreground flex items-center gap-2.5 flex-1">
                 {activeTab === "linkedin" && (
                   <>
                     <div className="p-2 rounded-lg bg-gradient-to-br from-platform-linkedin/25 to-platform-linkedin/10">
@@ -441,6 +505,15 @@ const Dashboard = () => {
                   </>
                 )}
               </h2>
+              <Button
+                size="sm"
+                onClick={() => window.open('https://t.me/lynkbin_bot', '_blank')}
+                className="bg-[#0088cc]/10 border border-[#0088cc]/30 hover:bg-[#0088cc]/20 text-[#0088cc] h-9 px-3"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                </svg>
+              </Button>
             </div>
 
             {/* Mobile Filters */}
