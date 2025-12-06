@@ -4,18 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
-
-interface LinkItem {
-  id: string;
-  title: string;
-  url: string;
-  description: string;
-  author: string;
-  platform: "linkedin" | "twitter" | "reddit" | "instagram" | "facebook";
-  tags: string[];
-  category: string;
-  savedAt: string;
-}
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { 
+  fetchCategoryPageData,
+  setSelectedPlatform,
+  LinkItem 
+} from "@/store/slices/linksSlice";
+import { toast } from "sonner";
 
 // Helper function to format date
 const formatDate = (dateString: string): string => {
@@ -52,76 +47,7 @@ const formatDate = (dateString: string): string => {
   }
 };
 
-const mockLinks: LinkItem[] = [
-  {
-    id: "1",
-    title: "The Future of AI in Product Design",
-    url: "https://linkedin.com/pulse/future-ai-design",
-    description: "Exploring how artificial intelligence is revolutionizing the way we approach product design and user experience.",
-    author: "Sarah Chen",
-    platform: "linkedin",
-    tags: ["AI", "Design"],
-    category: "Design",
-    savedAt: "2024-01-15",
-  },
-  {
-    id: "2",
-    title: "Building Scalable Microservices",
-    url: "https://linkedin.com/pulse/microservices-arch",
-    description: "Best practices for designing and implementing microservices architecture in modern applications.",
-    author: "Mike Johnson",
-    platform: "linkedin",
-    tags: ["Architecture", "Backend"],
-    category: "Engineering",
-    savedAt: "2024-01-14",
-  },
-  {
-    id: "3",
-    title: "10 Tips for Better React Performance",
-    url: "https://twitter.com/dev/status/123",
-    description: "Essential optimization techniques every React developer should know to build faster applications.",
-    author: "@devexpert",
-    platform: "twitter",
-    tags: ["React", "Performance"],
-    category: "Development",
-    savedAt: "2024-01-14",
-  },
-  {
-    id: "4",
-    title: "The State of Web3 in 2024",
-    url: "https://twitter.com/crypto/status/456",
-    description: "Analysis of current trends and future predictions for blockchain and decentralized technologies.",
-    author: "@web3insights",
-    platform: "twitter",
-    tags: ["Web3", "Blockchain"],
-    category: "Technology",
-    savedAt: "2024-01-13",
-  },
-  {
-    id: "5",
-    title: "Leadership Lessons from Tech Giants",
-    url: "https://linkedin.com/pulse/leadership-tech",
-    description: "Key takeaways from successful leaders in the technology industry.",
-    author: "Emma Davis",
-    platform: "linkedin",
-    tags: ["Leadership", "Career"],
-    category: "Business",
-    savedAt: "2024-01-12",
-  },
-  {
-    id: "6",
-    title: "CSS Grid vs Flexbox: When to Use What",
-    url: "https://twitter.com/css/status/789",
-    description: "Practical guide to choosing between CSS Grid and Flexbox for your layouts.",
-    author: "@csswizard",
-    platform: "twitter",
-    tags: ["CSS", "WebDev"],
-    category: "Development",
-    savedAt: "2024-01-11",
-  },
-];
-
-const categories = ["Design", "Engineering", "Development", "Technology", "Business"];
+// No more mock data - using API data from Redux
 
 const platforms = ["linkedin", "twitter", "reddit", "instagram", "facebook"] as const;
 type Platform = typeof platforms[number];
@@ -194,23 +120,51 @@ const LinkCard = ({ link }: { link: LinkItem }) => (
 );
 
 const Categories = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("Design");
-  const [selectedPlatform, setSelectedPlatform] = useState<Platform>("linkedin");
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  
+  // Redux state - using separate category page state
+  const { 
+    categoryPageItems: links, 
+    selectedPlatform, 
+    categoryPageCategories: availableCategories,
+    categoryPageLoading: isLoading, 
+    categoryPageError: error 
+  } = useAppSelector((state) => state.links);
 
-  // Get platform from localStorage (set by Dashboard)
+  // Local state for selected category
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  // Get platform from Redux (synced with Dashboard)
   useEffect(() => {
     const savedPlatform = localStorage.getItem("selectedPlatform") as Platform;
     if (savedPlatform && platforms.includes(savedPlatform)) {
-      setSelectedPlatform(savedPlatform);
+      dispatch(setSelectedPlatform(savedPlatform));
     }
-  }, []);
+  }, [dispatch]);
 
-  // Filter by platform and category
-  const filteredLinks = mockLinks.filter((link) => {
-    const matchesPlatform = link.platform === selectedPlatform;
-    const matchesCategory = link.category === selectedCategory;
-    return matchesPlatform && matchesCategory;
+  // Fetch category page data when platform changes (no filters applied)
+  useEffect(() => {
+    dispatch(fetchCategoryPageData(selectedPlatform));
+  }, [dispatch, selectedPlatform]);
+
+  // Set initial category when categories are loaded
+  useEffect(() => {
+    if (availableCategories.length > 0 && !selectedCategory) {
+      setSelectedCategory(availableCategories[0]);
+    }
+  }, [availableCategories, selectedCategory]);
+
+  // Show error toast if API call fails
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
+  // Filter by category (all posts for the platform, no Dashboard filters)
+  const filteredLinks = links.filter((link) => {
+    return link.category === selectedCategory;
   });
 
   return (
@@ -291,20 +245,24 @@ const Categories = () => {
           </div>
           <div className="overflow-x-auto pb-2 scrollbar-hide">
             <div className="flex items-center gap-2 min-w-max">
-              {categories.map((cat) => (
-                <Button
-                  key={cat}
-                  variant={selectedCategory === cat ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedCategory(cat)}
-                  className={selectedCategory === cat
-                    ? "bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 whitespace-nowrap"
-                    : "bg-card/50 border-border/50 backdrop-blur-xl hover:bg-card/80 whitespace-nowrap"
-                  }
-                >
-                  {cat}
-                </Button>
-              ))}
+              {availableCategories.length > 0 ? (
+                availableCategories.map((cat) => (
+                  <Button
+                    key={cat}
+                    variant={selectedCategory === cat ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedCategory(cat)}
+                    className={selectedCategory === cat
+                      ? "bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 whitespace-nowrap"
+                      : "bg-card/50 border-border/50 backdrop-blur-xl hover:bg-card/80 whitespace-nowrap"
+                    }
+                  >
+                    {cat}
+                  </Button>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">No categories available</p>
+              )}
             </div>
           </div>
         </div>
@@ -322,7 +280,12 @@ const Categories = () => {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredLinks.length > 0 ? (
+            {isLoading ? (
+              <div className="col-span-full text-center py-12">
+                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Loading links...</p>
+              </div>
+            ) : filteredLinks.length > 0 ? (
               filteredLinks.map((link) => (
                 <LinkCard key={link.id} link={link} />
               ))
@@ -330,7 +293,7 @@ const Categories = () => {
               <div className="col-span-full text-center py-12">
                 <Tag className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
                 <p className="text-muted-foreground">
-                  No {platformLabels[selectedPlatform]} links found in {selectedCategory}
+                  No {platformLabels[selectedPlatform]} links found in {selectedCategory}. Add some from the dashboard!
                 </p>
               </div>
             )}

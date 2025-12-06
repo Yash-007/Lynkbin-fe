@@ -38,6 +38,11 @@ interface LinksState {
   selectedAuthors: string[];
   selectedTags: string[];
   selectedCategory: string;
+  // Separate state for Categories page
+  categoryPageItems: LinkItem[];
+  categoryPageCategories: string[];
+  categoryPageLoading: boolean;
+  categoryPageError: string | null;
 }
 
 const initialState: LinksState = {
@@ -51,6 +56,11 @@ const initialState: LinksState = {
   selectedAuthors: [],
   selectedTags: [],
   selectedCategory: 'Design',
+  // Separate state for Categories page
+  categoryPageItems: [],
+  categoryPageCategories: [],
+  categoryPageLoading: false,
+  categoryPageError: null,
 };
 
 // Async thunks
@@ -128,6 +138,25 @@ export const fetchCategories = createAsyncThunk(
       return await postsApi.getCategories(platform);
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch categories');
+    }
+  }
+);
+
+// Separate actions for Categories page (no filters applied)
+export const fetchCategoryPageData = createAsyncThunk(
+  'links/fetchCategoryPageData',
+  async (platform: string, { rejectWithValue }) => {
+    try {
+      // Fetch posts by platform only, without any filters
+      const posts = await postsApi.getPosts({ platform });
+      const categories = await postsApi.getCategories(platform);
+      
+      return {
+        posts: posts.map(transformPostToLink),
+        categories,
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to fetch category page data');
     }
   }
 );
@@ -229,6 +258,21 @@ const linksSlice = createSlice({
     // Fetch categories
     builder.addCase(fetchCategories.fulfilled, (state, action) => {
       state.availableCategories = action.payload;
+    });
+
+    // Fetch category page data
+    builder.addCase(fetchCategoryPageData.pending, (state) => {
+      state.categoryPageLoading = true;
+      state.categoryPageError = null;
+    });
+    builder.addCase(fetchCategoryPageData.fulfilled, (state, action) => {
+      state.categoryPageLoading = false;
+      state.categoryPageItems = action.payload.posts;
+      state.categoryPageCategories = action.payload.categories;
+    });
+    builder.addCase(fetchCategoryPageData.rejected, (state, action) => {
+      state.categoryPageLoading = false;
+      state.categoryPageError = action.payload as string;
     });
   },
 });
