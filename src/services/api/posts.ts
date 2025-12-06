@@ -49,15 +49,15 @@ export const postsApi = {
     }
     
     if (params.tags && params.tags.length > 0) {
-      params.tags.forEach(tag => queryParams.append('tags[]', tag));
+      params.tags.forEach(tag => queryParams.append('tags', tag));
     }
     
     if (params.authors && params.authors.length > 0) {
-      params.authors.forEach(author => queryParams.append('authors[]', author));
+      params.authors.forEach(author => queryParams.append('authors', author));
     }
     
     if (params.categories && params.categories.length > 0) {
-      params.categories.forEach(category => queryParams.append('categories[]', category));
+      params.categories.forEach(category => queryParams.append('categories', category));
     }
 
     const response = await apiClient.get<ApiResponse<Post[]>>(`/posts?${queryParams.toString()}`);
@@ -70,31 +70,71 @@ export const postsApi = {
   // Get user's authors for a platform
   getAuthors: async (platform: string): Promise<string[]> => {
     const backendPlatform = platform === 'twitter' ? 'x' : platform;
-    const response = await apiClient.get<ApiResponse<string[]>>(`/posts/authors?platform=${backendPlatform}`);
+    
+    interface UserAuthor {
+      user_id: number;
+      platform: string;
+      names: string[];
+      created_at: string;
+    }
+    
+    const response = await apiClient.get<ApiResponse<UserAuthor[]>>(`/posts/authors?platform=${backendPlatform}`);
     if (!response.data.success) {
       throw new Error(response.data.message || 'Failed to fetch authors');
     }
-    return response.data.data || [];
+    
+    // Backend returns array of UserAuthor objects, extract and flatten the names arrays
+    const authors = response.data.data || [];
+    let allAuthors = authors.flatMap(author => author.names || []);
+    allAuthors = allAuthors.filter(author => author !== '').map(author => author.trim());
+    return [...new Set(allAuthors)]; // Remove duplicates
   },
 
   // Get user's categories for a platform
   getCategories: async (platform: string): Promise<string[]> => {
     const backendPlatform = platform === 'twitter' ? 'x' : platform;
-    const response = await apiClient.get<ApiResponse<string[]>>(`/posts/categories?platform=${backendPlatform}`);
+    
+    interface UserCategories {
+      user_id: number;
+      platform: string;
+      categories: string[];
+      updated_at: string;
+    }
+    
+    const response = await apiClient.get<ApiResponse<UserCategories[]>>(`/posts/categories?platform=${backendPlatform}`);
     if (!response.data.success) {
       throw new Error(response.data.message || 'Failed to fetch categories');
     }
-    return response.data.data || [];
+    
+    // Backend returns array of UserCategories objects, extract and flatten the categories arrays
+    const categoryObjs = response.data.data || [];
+    let allCategories = categoryObjs.flatMap(cat => cat.categories || []);
+    allCategories = allCategories.filter(category => category !== '').map(category => category.trim());
+    return [...new Set(allCategories)]; // Remove duplicates
   },
 
   // Get user's tags for a platform
   getTags: async (platform: string): Promise<string[]> => {
     const backendPlatform = platform === 'twitter' ? 'x' : platform;
-    const response = await apiClient.get<ApiResponse<string[]>>(`/posts/tags?platform=${backendPlatform}`);
+    
+    interface UserTags {
+      user_id: number;
+      platform: string;
+      tags: string[];
+      created_at: string;
+      updated_at: string;
+    }
+    
+    const response = await apiClient.get<ApiResponse<UserTags[]>>(`/posts/tags?platform=${backendPlatform}`);
     if (!response.data.success) {
       throw new Error(response.data.message || 'Failed to fetch tags');
     }
-    return response.data.data || [];
+    
+    // Backend returns array of UserTags objects, extract and flatten the tags arrays
+    const tagObjs = response.data.data || [];
+    let allTags = tagObjs.flatMap(tagObj => tagObj.tags || []);
+    allTags = allTags.filter(tag => tag !== '').map(tag => tag.trim());
+    return [...new Set(allTags)]; // Remove duplicates
   },
 };
 

@@ -254,7 +254,7 @@ const Dashboard = () => {
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-[200px] p-2 bg-popover border-border" align="start">
-                        <div className="space-y-1">
+                        <div className="space-y-1 max-h-[300px] overflow-y-auto">
                           {availableAuthors.map((author) => (
                             <button
                               key={author}
@@ -297,7 +297,7 @@ const Dashboard = () => {
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-[200px] p-2 bg-popover border-border" align="start">
-                        <div className="space-y-1">
+                        <div className="space-y-1 max-h-[300px] overflow-y-auto">
                           {availableTags.map((tag) => (
                             <button
                               key={tag}
@@ -474,7 +474,7 @@ const Dashboard = () => {
                     {availableAuthors.map((author) => (
                       <button
                         key={author}
-                        onClick={() => toggleAuthor(author)}
+                        onClick={() => handleToggleAuthor(author)}
                         className="flex items-center w-full px-2 py-2 text-sm rounded hover:bg-accent hover:text-accent-foreground transition-colors"
                       >
                         <div className={cn(
@@ -517,7 +517,7 @@ const Dashboard = () => {
                     {availableTags.map((tag) => (
                       <button
                         key={tag}
-                        onClick={() => toggleTag(tag)}
+                        onClick={() => handleToggleTag(tag)}
                         className="flex items-center w-full px-2 py-2 text-sm rounded hover:bg-accent hover:text-accent-foreground transition-colors"
                       >
                         <div className={cn(
@@ -607,6 +607,41 @@ const Dashboard = () => {
   );
 };
 
+// Helper function to format date
+const formatDate = (dateString: string): string => {
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    // If within last 24 hours, show relative time
+    if (diffInDays === 0) {
+      const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+      if (diffInHours === 0) {
+        const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+        if (diffInMinutes < 1) return 'Just now';
+        return `${diffInMinutes}m ago`;
+      }
+      return `${diffInHours}h ago`;
+    }
+    
+    // If within last week, show days ago
+    if (diffInDays < 7) {
+      return `${diffInDays}d ago`;
+    }
+
+    // Otherwise show formatted date
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+    });
+  } catch (error) {
+    return dateString;
+  }
+};
+
 const LinkCard = ({ link }: { link: LinkItem }) => {
   return (
     <article className="group relative bg-card/30 backdrop-blur-xl border border-border/50 rounded-xl p-5 shadow-blur hover:shadow-glow hover:border-primary/30 transition-all duration-300 overflow-hidden">
@@ -646,7 +681,7 @@ const LinkCard = ({ link }: { link: LinkItem }) => {
         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
           <span className="font-medium">{link.author}</span>
           <span>•</span>
-          <span>{link.savedAt}</span>
+          <span>{formatDate(link.savedAt)}</span>
         </div>
 
         <div className="flex flex-wrap gap-1.5">

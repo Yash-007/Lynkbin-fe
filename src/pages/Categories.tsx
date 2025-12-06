@@ -17,6 +17,41 @@ interface LinkItem {
   savedAt: string;
 }
 
+// Helper function to format date
+const formatDate = (dateString: string): string => {
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    // If within last 24 hours, show relative time
+    if (diffInDays === 0) {
+      const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+      if (diffInHours === 0) {
+        const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+        if (diffInMinutes < 1) return 'Just now';
+        return `${diffInMinutes}m ago`;
+      }
+      return `${diffInHours}h ago`;
+    }
+    
+    // If within last week, show days ago
+    if (diffInDays < 7) {
+      return `${diffInDays}d ago`;
+    }
+
+    // Otherwise show formatted date
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+    });
+  } catch (error) {
+    return dateString;
+  }
+};
+
 const mockLinks: LinkItem[] = [
   {
     id: "1",
@@ -145,7 +180,7 @@ const LinkCard = ({ link }: { link: LinkItem }) => (
       <div className="flex items-center gap-2">
         <span className="text-xs text-muted-foreground">{link.author}</span>
         <span className="text-muted-foreground/50">•</span>
-        <span className="text-xs text-muted-foreground">{link.savedAt}</span>
+        <span className="text-xs text-muted-foreground">{formatDate(link.savedAt)}</span>
       </div>
       <div className="flex items-center gap-1">
         {link.tags.slice(0, 2).map((tag) => (

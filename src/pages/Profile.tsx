@@ -5,20 +5,31 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { cn } from "@/lib/utils";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { logout } from "@/store/slices/authSlice";
+import { toast } from "sonner";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [activeTab] = useState("linkedin");
+  const { user } = useAppSelector((state) => state.auth);
   
-  // Mock user data
+  // Use actual user data from Redux, fallback to mock data
   const userData = {
-    name: "Alex Johnson",
-    email: "alex@example.com",
-    avatar: "AJ",
-    memberSince: "Jan 2024",
+    name: user?.name || "Alex Johnson",
+    email: user?.email || "alex@example.com",
+    avatar: user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : "AJ",
+    memberSince: user?.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : "Jan 2024",
     totalLinks: 156,
     platforms: 5,
     categories: 8,
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success("Logged out successfully!");
+    navigate("/");
   };
 
   const stats = [
@@ -156,7 +167,10 @@ const Profile = () => {
 
         {/* Logout Button */}
         <div className="bg-card/50 backdrop-blur-xl rounded-xl border border-border/50 overflow-hidden mb-6">
-          <button className="w-full flex items-center gap-4 p-4 hover:bg-destructive/10 transition-colors text-left">
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center gap-4 p-4 hover:bg-destructive/10 transition-colors text-left"
+          >
             <div className="w-10 h-10 rounded-lg bg-destructive/10 flex items-center justify-center flex-shrink-0">
               <LogOut className="w-5 h-5 text-destructive" />
             </div>

@@ -17,7 +17,7 @@ export interface LinkItem {
 // Helper function to transform backend Post to frontend LinkItem
 const transformPostToLink = (post: Post): LinkItem => ({
   id: post.id.toString(),
-  title: post.topic,
+  title: "Title always confuses the readers. this post is without a title." + post.topic,
   url: '', // Backend doesn't return URL in post, we'll need to store it separately or extract from post_link
   description: post.description,
   author: post.author,
