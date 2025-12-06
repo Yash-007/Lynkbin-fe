@@ -121,6 +121,11 @@ const Profile = () => {
               {section.items.map((item, itemIndex) => (
                 <button
                   key={itemIndex}
+                  onClick={() => {
+                    if (item.label === "Help Center") {
+                      navigate("/help");
+                    }
+                  }}
                   className={cn(
                     "w-full flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors text-left",
                     itemIndex !== section.items.length - 1 && "border-b border-border/50"
