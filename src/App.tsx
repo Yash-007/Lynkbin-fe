@@ -8,6 +8,7 @@ import PasteBin from "./pages/PasteBin";
 import Categories from "./pages/Categories";
 import Profile from "./pages/Profile";
 import HelpCenter from "./pages/HelpCenter";
+import PrivacySecurity from "./pages/PrivacySecurity";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
         <Route path="/categories" element={<Categories />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/help" element={<HelpCenter />} />
+        <Route path="/privacy" element={<PrivacySecurity />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

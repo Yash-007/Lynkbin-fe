@@ -124,6 +124,8 @@ const Profile = () => {
                   onClick={() => {
                     if (item.label === "Help Center") {
                       navigate("/help");
+                    } else if (item.label === "Privacy & Security") {
+                      navigate("/privacy");
                     }
                   }}
                   className={cn(
