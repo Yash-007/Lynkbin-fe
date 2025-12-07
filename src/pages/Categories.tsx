@@ -95,8 +95,10 @@ const LinkCard = ({ link }: { link: LinkItem }) => (
   >
     {/* Author and Date at the top */}
     <div className="flex items-center gap-2 mb-3">
-      <span className="text-xs font-medium text-muted-foreground">{link.author}</span>
-      <span className="text-muted-foreground/50">•</span>
+      <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+        {link.author}
+      </span>
+      <span className="text-xs text-muted-foreground/50">•</span>
       <span className="text-xs text-muted-foreground">{formatDate(link.savedAt)}</span>
     </div>
 
@@ -153,12 +155,24 @@ const Categories = () => {
     dispatch(fetchCategoryPageData(selectedPlatform));
   }, [dispatch, selectedPlatform]);
 
-  // Set initial category when categories are loaded
+  // Count posts per category
+  const categoryPostCounts = availableCategories.reduce((acc, category) => {
+    const count = links.filter(link => link.category === category).length;
+    acc[category] = count;
+    return acc;
+  }, {} as Record<string, number>);
+
+  // Sort categories by post count (descending)
+  const sortedCategories = [...availableCategories].sort((a, b) => {
+    return (categoryPostCounts[b] || 0) - (categoryPostCounts[a] || 0);
+  });
+
+  // Set initial category when categories are loaded (use category with most posts)
   useEffect(() => {
-    if (availableCategories.length > 0 && !selectedCategory) {
-      setSelectedCategory(availableCategories[0]);
+    if (sortedCategories.length > 0 && !selectedCategory) {
+      setSelectedCategory(sortedCategories[0]);
     }
-  }, [availableCategories, selectedCategory]);
+  }, [sortedCategories.length, selectedCategory]);
 
   // Show error toast if API call fails
   useEffect(() => {
@@ -233,7 +247,7 @@ const Categories = () => {
                   key={platform}
                   variant={selectedPlatform === platform ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedPlatform(platform)}
+                  onClick={() => handlePlatformChange(platform)}
                   className={selectedPlatform === platform
                     ? `${platformColors[platform].bg} ${platformColors[platform].text} ${platformColors[platform].border} border hover:bg-opacity-80 whitespace-nowrap flex items-center gap-2 transition-all duration-300`
                     : "bg-card/50 border-border/50 backdrop-blur-xl hover:bg-card/80 whitespace-nowrap flex items-center gap-2 transition-all duration-300"
@@ -255,19 +269,28 @@ const Categories = () => {
           </div>
           <div className="overflow-x-auto pb-2 scrollbar-hide">
             <div className="flex items-center gap-2 min-w-max">
-              {availableCategories.length > 0 ? (
-                availableCategories.map((cat) => (
+              {sortedCategories.length > 0 ? (
+                sortedCategories.map((cat) => (
                   <Button
                     key={cat}
                     variant={selectedCategory === cat ? "default" : "outline"}
                     size="sm"
                     onClick={() => setSelectedCategory(cat)}
                     className={selectedCategory === cat
-                      ? "bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 whitespace-nowrap"
-                      : "bg-card/50 border-border/50 backdrop-blur-xl hover:bg-card/80 whitespace-nowrap"
+                      ? "bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 whitespace-nowrap flex items-center gap-1.5"
+                      : "bg-card/50 border-border/50 backdrop-blur-xl hover:bg-card/80 whitespace-nowrap flex items-center gap-1.5"
                     }
                   >
-                    {cat}
+                    <span>{cat}</span>
+                    <Badge 
+                      variant="secondary" 
+                      className={selectedCategory === cat 
+                        ? "bg-primary/30 text-primary border-primary/40 text-[10px] px-1.5 py-0" 
+                        : "bg-muted/50 text-muted-foreground border-border/30 text-[10px] px-1.5 py-0"
+                      }
+                    >
+                      {categoryPostCounts[cat] || 0}
+                    </Badge>
                   </Button>
                 ))
               ) : (

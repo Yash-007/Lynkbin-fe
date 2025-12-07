@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -12,7 +12,9 @@ import {
   fetchLinksByPlatform, 
   fetchAuthors, 
   fetchTags,
-  setSelectedPlatform, 
+  setSelectedPlatform,
+  setSelectedAuthors,
+  setSelectedTags,
   toggleAuthor, 
   toggleTag, 
   clearFilters,
@@ -24,6 +26,7 @@ import { toast } from "sonner";
 const Dashboard = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   
   // Redux state
   const { 
@@ -43,18 +46,66 @@ const Dashboard = () => {
   const [showTelegramBanner, setShowTelegramBanner] = useState(() => {
     return localStorage.getItem("hideTelegramBanner") !== "true";
   });
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const dismissTelegramBanner = () => {
     setShowTelegramBanner(false);
     localStorage.setItem("hideTelegramBanner", "true");
   };
 
+  // Initialize filters from URL params on mount
+  useEffect(() => {
+    const platformParam = searchParams.get('platform');
+    const authorsParam = searchParams.get('authors');
+    const tagsParam = searchParams.get('tags');
+
+    if (platformParam) {
+      dispatch(setSelectedPlatform(platformParam));
+    }
+
+    if (authorsParam) {
+      const authors = authorsParam.split(',').filter(a => a.trim());
+      dispatch(setSelectedAuthors(authors));
+    }
+
+    if (tagsParam) {
+      const tags = tagsParam.split(',').filter(t => t.trim());
+      dispatch(setSelectedTags(tags));
+    }
+
+    setIsInitialized(true);
+  }, []);
+
+  // Update URL params when filters change
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const params = new URLSearchParams();
+    
+    // Add platform to URL
+    params.set('platform', selectedPlatform);
+    
+    // Add authors to URL
+    if (selectedAuthors.length > 0) {
+      params.set('authors', selectedAuthors.join(','));
+    }
+    
+    // Add tags to URL
+    if (selectedTags.length > 0) {
+      params.set('tags', selectedTags.join(','));
+    }
+
+    setSearchParams(params, { replace: true });
+  }, [selectedPlatform, selectedAuthors, selectedTags, isInitialized, setSearchParams]);
+
   // Fetch data when component mounts or platform/filters change
   useEffect(() => {
+    if (!isInitialized) return;
+    
     dispatch(fetchLinksByPlatform(selectedPlatform));
     dispatch(fetchAuthors(selectedPlatform));
     dispatch(fetchTags(selectedPlatform));
-  }, [dispatch, selectedPlatform, selectedAuthors, selectedTags]);
+  }, [dispatch, selectedPlatform, selectedAuthors, selectedTags, isInitialized]);
 
   // Show error toast if API call fails
   useEffect(() => {
@@ -672,10 +723,12 @@ const LinkCard = ({ link }: { link: LinkItem }) => {
         </div>
 
         {/* Author and Date at the top */}
-        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-          <span className="font-medium">{link.author}</span>
-          <span>•</span>
-          <span>{formatDate(link.savedAt)}</span>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-sm font-semibold text-foreground hover:text-primary transition-colors">
+            {link.author}
+          </span>
+          <span className="text-xs text-muted-foreground/50">•</span>
+          <span className="text-xs text-muted-foreground">{formatDate(link.savedAt)}</span>
         </div>
 
         {/* Title */}
