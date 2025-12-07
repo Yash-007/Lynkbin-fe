@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Plus, Link as LinkIcon, ExternalLink, Tag, X, Grid3x3, Check } from "lucide-react";
+import { Plus, Link as LinkIcon, ExternalLink, Tag, X, Grid3x3, Check, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,7 @@ import {
   setSelectedPlatform,
   setSelectedAuthors,
   setSelectedTags,
+  setSortOrder,
   toggleAuthor, 
   toggleTag, 
   clearFilters,
@@ -33,7 +35,8 @@ const Dashboard = () => {
     items: links, 
     selectedPlatform, 
     selectedAuthors, 
-    selectedTags, 
+    selectedTags,
+    sortOrder,
     availableAuthors, 
     availableTags,
     isLoading, 
@@ -43,6 +46,8 @@ const Dashboard = () => {
   // Local UI state
   const [authorOpen, setAuthorOpen] = useState(false);
   const [tagOpen, setTagOpen] = useState(false);
+  const [sortOpen, setSortOpen] = useState(false);
+  const [filtersSheetOpen, setFiltersSheetOpen] = useState(false);
   const [showTelegramBanner, setShowTelegramBanner] = useState(() => {
     return localStorage.getItem("hideTelegramBanner") !== "true";
   });
@@ -58,6 +63,7 @@ const Dashboard = () => {
     const platformParam = searchParams.get('platform');
     const authorsParam = searchParams.get('authors');
     const tagsParam = searchParams.get('tags');
+    const sortParam = searchParams.get('sort') as 'desc' | 'asc' | null;
 
     if (platformParam) {
       dispatch(setSelectedPlatform(platformParam));
@@ -71,6 +77,10 @@ const Dashboard = () => {
     if (tagsParam) {
       const tags = tagsParam.split(',').filter(t => t.trim());
       dispatch(setSelectedTags(tags));
+    }
+
+    if (sortParam && (sortParam === 'desc' || sortParam === 'asc')) {
+      dispatch(setSortOrder(sortParam));
     }
 
     setIsInitialized(true);
@@ -95,8 +105,13 @@ const Dashboard = () => {
       params.set('tags', selectedTags.join(','));
     }
 
+    // Add sort order to URL
+    if (sortOrder !== 'desc') {
+      params.set('sort', sortOrder);
+    }
+
     setSearchParams(params, { replace: true });
-  }, [selectedPlatform, selectedAuthors, selectedTags, isInitialized, setSearchParams]);
+  }, [selectedPlatform, selectedAuthors, selectedTags, sortOrder, isInitialized, setSearchParams]);
 
   // Fetch data when component mounts or platform/filters change
   useEffect(() => {
@@ -127,8 +142,12 @@ const Dashboard = () => {
     dispatch(toggleTag(tag));
   };
 
-  // Filtered links (client-side filtering on already filtered backend data)
-  const platformFilteredLinks = links;
+  // Filtered and sorted links
+  const platformFilteredLinks = [...links].sort((a, b) => {
+    const dateA = new Date(a.savedAt).getTime();
+    const dateB = new Date(b.savedAt).getTime();
+    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+  });
 
 
   return (
@@ -372,6 +391,68 @@ const Dashboard = () => {
                       </PopoverContent>
                     </Popover>
 
+                    {/* Sort Order Filter */}
+                    <Popover open={sortOpen} onOpenChange={setSortOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-[160px] justify-between bg-card/50 border-border/50 hover:bg-card/80 backdrop-blur-xl"
+                        >
+                          <span className="truncate flex items-center gap-1.5">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                            </svg>
+                            {sortOrder === 'desc' ? 'Newest First' : 'Oldest First'}
+                          </span>
+                          <svg className="ml-2 h-4 w-4 shrink-0 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[160px] p-2 bg-popover border-border" align="start">
+                        <div className="space-y-1">
+                          <button
+                            onClick={() => {
+                              dispatch(setSortOrder('desc'));
+                              setSortOpen(false);
+                            }}
+                            className="flex items-center w-full px-2 py-1.5 text-sm rounded hover:bg-accent hover:text-accent-foreground transition-colors"
+                          >
+                            <div className={cn(
+                              "mr-2 flex h-4 w-4 items-center justify-center rounded border",
+                              sortOrder === 'desc'
+                                ? "bg-primary border-primary text-primary-foreground"
+                                : "border-input"
+                            )}>
+                              {sortOrder === 'desc' && (
+                                <Check className="h-3 w-3" />
+                              )}
+                            </div>
+                            <span>Newest First</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              dispatch(setSortOrder('asc'));
+                              setSortOpen(false);
+                            }}
+                            className="flex items-center w-full px-2 py-1.5 text-sm rounded hover:bg-accent hover:text-accent-foreground transition-colors"
+                          >
+                            <div className={cn(
+                              "mr-2 flex h-4 w-4 items-center justify-center rounded border",
+                              sortOrder === 'asc'
+                                ? "bg-primary border-primary text-primary-foreground"
+                                : "border-input"
+                            )}>
+                              {sortOrder === 'asc' && (
+                                <Check className="h-3 w-3" />
+                              )}
+                            </div>
+                            <span>Oldest First</span>
+                          </button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+
                     {/* Clear Filters */}
                     {(selectedAuthors.length > 0 || selectedTags.length > 0) && (
                       <Button
@@ -500,137 +581,224 @@ const Dashboard = () => {
               </Button>
             </div>
 
-            {/* Mobile Filters */}
-            <div className="flex flex-col gap-3 mb-4">
-              {/* Author Filter */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-between bg-card/50 border-border/50 hover:bg-card/80 backdrop-blur-xl"
-                  >
-                    <span className="truncate">
-                      {selectedAuthors.length === 0 
-                        ? "Filter by author..."
-                        : `${selectedAuthors.length} author${selectedAuthors.length > 1 ? 's' : ''}`
-                      }
-                    </span>
-                    <svg className="ml-2 h-4 w-4 shrink-0 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[calc(100vw-2rem)] p-2 bg-popover border-border">
-                  <div className="space-y-1 max-h-[300px] overflow-y-auto">
-                    {availableAuthors.map((author) => (
-                      <button
-                        key={author}
-                        onClick={() => handleToggleAuthor(author)}
-                        className="flex items-center w-full px-2 py-2 text-sm rounded hover:bg-accent hover:text-accent-foreground transition-colors"
-                      >
-                        <div className={cn(
-                          "mr-2 flex h-4 w-4 items-center justify-center rounded border",
-                          selectedAuthors.includes(author)
-                            ? "bg-primary border-primary text-primary-foreground"
-                            : "border-input"
-                        )}>
-                          {selectedAuthors.includes(author) && (
-                            <Check className="h-3 w-3" />
+            {/* Mobile Filters - Compact Design */}
+            <div className="space-y-3 mb-4">
+              <div className="flex items-center gap-2">
+                {/* Filters Sheet Trigger */}
+                <Sheet open={filtersSheetOpen} onOpenChange={setFiltersSheetOpen}>
+                  <SheetTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="flex-1 justify-between bg-card/50 border-border/50 hover:bg-card/80 backdrop-blur-xl"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Filter className="h-4 w-4" />
+                        <span>Filters & Sort</span>
+                        {(selectedAuthors.length > 0 || selectedTags.length > 0) && (
+                          <Badge variant="secondary" className="bg-primary/20 text-primary h-5 px-1.5 text-xs">
+                            {selectedAuthors.length + selectedTags.length}
+                          </Badge>
+                        )}
+                      </span>
+                      <svg className="h-4 w-4 shrink-0 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </Button>
+                  </SheetTrigger>
+
+                  <SheetContent side="bottom" className="h-[85vh] bg-background/95 backdrop-blur-xl border-t border-border">
+                    <SheetHeader className="text-left mb-6">
+                      <SheetTitle className="flex items-center justify-between">
+                        <span className="flex items-center gap-2">
+                          <Filter className="h-5 w-5 text-primary" />
+                          Filters & Sort
+                        </span>
+                        {(selectedAuthors.length > 0 || selectedTags.length > 0) && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => dispatch(clearFilters())}
+                            className="text-muted-foreground hover:text-foreground h-8"
+                          >
+                            <X className="h-4 w-4 mr-1" />
+                            Clear all
+                          </Button>
+                        )}
+                      </SheetTitle>
+                    </SheetHeader>
+
+                    <div className="space-y-6 overflow-y-auto h-[calc(85vh-80px)] pb-6">
+                      {/* Sort Order Section */}
+                      <div>
+                        <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                          <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                          </svg>
+                          Sort Order
+                        </h3>
+                        <div className="space-y-2">
+                          <button
+                            onClick={() => dispatch(setSortOrder('desc'))}
+                            className={cn(
+                              "flex items-center w-full px-4 py-3 text-sm rounded-lg border transition-all",
+                              sortOrder === 'desc'
+                                ? "bg-primary/10 border-primary/30 text-primary font-medium"
+                                : "bg-card/50 border-border/50 hover:bg-card/80"
+                            )}
+                          >
+                            <div className={cn(
+                              "mr-3 flex h-5 w-5 items-center justify-center rounded-full border-2",
+                              sortOrder === 'desc'
+                                ? "bg-primary border-primary"
+                                : "border-input"
+                            )}>
+                              {sortOrder === 'desc' && (
+                                <div className="h-2 w-2 rounded-full bg-white" />
+                              )}
+                            </div>
+                            <span>Newest First</span>
+                          </button>
+                          <button
+                            onClick={() => dispatch(setSortOrder('asc'))}
+                            className={cn(
+                              "flex items-center w-full px-4 py-3 text-sm rounded-lg border transition-all",
+                              sortOrder === 'asc'
+                                ? "bg-primary/10 border-primary/30 text-primary font-medium"
+                                : "bg-card/50 border-border/50 hover:bg-card/80"
+                            )}
+                          >
+                            <div className={cn(
+                              "mr-3 flex h-5 w-5 items-center justify-center rounded-full border-2",
+                              sortOrder === 'asc'
+                                ? "bg-primary border-primary"
+                                : "border-input"
+                            )}>
+                              {sortOrder === 'asc' && (
+                                <div className="h-2 w-2 rounded-full bg-white" />
+                              )}
+                            </div>
+                            <span>Oldest First</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Authors Section */}
+                      <div>
+                        <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                          <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                          Authors
+                          {selectedAuthors.length > 0 && (
+                            <Badge variant="secondary" className="bg-primary/20 text-primary h-5 px-1.5 text-xs">
+                              {selectedAuthors.length}
+                            </Badge>
+                          )}
+                        </h3>
+                        <div className="space-y-1 max-h-[250px] overflow-y-auto rounded-lg border border-border/50 bg-card/30 p-2">
+                          {availableAuthors.length > 0 ? (
+                            availableAuthors.map((author) => (
+                              <button
+                                key={author}
+                                onClick={() => handleToggleAuthor(author)}
+                                className="flex items-center w-full px-3 py-2.5 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+                              >
+                                <div className={cn(
+                                  "mr-3 flex h-4 w-4 items-center justify-center rounded border",
+                                  selectedAuthors.includes(author)
+                                    ? "bg-primary border-primary text-primary-foreground"
+                                    : "border-input"
+                                )}>
+                                  {selectedAuthors.includes(author) && (
+                                    <Check className="h-3 w-3" />
+                                  )}
+                                </div>
+                                <span className="truncate">{author}</span>
+                              </button>
+                            ))
+                          ) : (
+                            <p className="text-sm text-muted-foreground text-center py-4">No authors available</p>
                           )}
                         </div>
-                        <span className="truncate">{author}</span>
-                      </button>
-                    ))}
-                  </div>
-                </PopoverContent>
-              </Popover>
+                      </div>
 
-              {/* Tag Filter */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-between bg-card/50 border-border/50 hover:bg-card/80 backdrop-blur-xl"
-                  >
-                    <span className="truncate">
-                      {selectedTags.length === 0 
-                        ? "Filter by tag..."
-                        : `${selectedTags.length} tag${selectedTags.length > 1 ? 's' : ''}`
-                      }
-                    </span>
-                    <svg className="ml-2 h-4 w-4 shrink-0 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[calc(100vw-2rem)] p-2 bg-popover border-border">
-                  <div className="space-y-1 max-h-[300px] overflow-y-auto">
-                    {availableTags.map((tag) => (
-                      <button
-                        key={tag}
-                        onClick={() => handleToggleTag(tag)}
-                        className="flex items-center w-full px-2 py-2 text-sm rounded hover:bg-accent hover:text-accent-foreground transition-colors"
-                      >
-                        <div className={cn(
-                          "mr-2 flex h-4 w-4 items-center justify-center rounded border",
-                          selectedTags.includes(tag)
-                            ? "bg-primary border-primary text-primary-foreground"
-                            : "border-input"
-                        )}>
-                          {selectedTags.includes(tag) && (
-                            <Check className="h-3 w-3" />
+                      {/* Tags Section */}
+                      <div>
+                        <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                          <Tag className="w-4 h-4 text-primary" />
+                          Tags
+                          {selectedTags.length > 0 && (
+                            <Badge variant="secondary" className="bg-primary/20 text-primary h-5 px-1.5 text-xs">
+                              {selectedTags.length}
+                            </Badge>
+                          )}
+                        </h3>
+                        <div className="space-y-1 max-h-[250px] overflow-y-auto rounded-lg border border-border/50 bg-card/30 p-2">
+                          {availableTags.length > 0 ? (
+                            availableTags.map((tag) => (
+                              <button
+                                key={tag}
+                                onClick={() => handleToggleTag(tag)}
+                                className="flex items-center w-full px-3 py-2.5 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+                              >
+                                <div className={cn(
+                                  "mr-3 flex h-4 w-4 items-center justify-center rounded border",
+                                  selectedTags.includes(tag)
+                                    ? "bg-primary border-primary text-primary-foreground"
+                                    : "border-input"
+                                )}>
+                                  {selectedTags.includes(tag) && (
+                                    <Check className="h-3 w-3" />
+                                  )}
+                                </div>
+                                <span className="truncate">{tag}</span>
+                              </button>
+                            ))
+                          ) : (
+                            <p className="text-sm text-muted-foreground text-center py-4">No tags available</p>
                           )}
                         </div>
-                        <span className="truncate">{tag}</span>
-                      </button>
-                    ))}
-                  </div>
-                </PopoverContent>
-              </Popover>
+                      </div>
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
 
-              {/* Active Filters */}
+              {/* Active Filters Chips */}
               {(selectedAuthors.length > 0 || selectedTags.length > 0) && (
                 <div className="flex flex-wrap gap-2">
                   {selectedAuthors.map((author) => (
                     <Badge 
                       key={author} 
                       variant="secondary" 
-                      className="bg-primary/10 text-primary border-primary/20 gap-1"
+                      className="bg-primary/10 text-primary border-primary/20 gap-1.5 pr-1"
                     >
-                      {author}
-                      <X 
-                        className="h-3 w-3 cursor-pointer hover:text-primary/70" 
+                      <span className="truncate max-w-[120px]">{author}</span>
+                      <button
                         onClick={() => handleToggleAuthor(author)}
-                      />
+                        className="hover:bg-primary/20 rounded-sm p-0.5 transition-colors"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
                     </Badge>
                   ))}
                   {selectedTags.map((tag) => (
                     <Badge 
                       key={tag} 
                       variant="secondary" 
-                      className="bg-primary/10 text-primary border-primary/20 gap-1"
+                      className="bg-primary/10 text-primary border-primary/20 gap-1.5 pr-1"
                     >
-                      {tag}
-                      <X 
-                        className="h-3 w-3 cursor-pointer hover:text-primary/70" 
+                      <Tag className="h-3 w-3" />
+                      <span className="truncate max-w-[120px]">{tag}</span>
+                      <button
                         onClick={() => handleToggleTag(tag)}
-                      />
+                        className="hover:bg-primary/20 rounded-sm p-0.5 transition-colors"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
                     </Badge>
                   ))}
                 </div>
-              )}
-
-              {/* Clear Filters Button */}
-              {(selectedAuthors.length > 0 || selectedTags.length > 0) && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => dispatch(clearFilters())}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-4 w-4 mr-1" />
-                  Clear all filters
-                </Button>
               )}
             </div>
 

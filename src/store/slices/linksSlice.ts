@@ -38,6 +38,7 @@ interface LinksState {
   selectedAuthors: string[];
   selectedTags: string[];
   selectedCategory: string;
+  sortOrder: 'desc' | 'asc'; // Sort by date: desc = newest first, asc = oldest first
   // Separate state for Categories page
   categoryPageItems: LinkItem[];
   categoryPageCategories: string[];
@@ -56,6 +57,7 @@ const initialState: LinksState = {
   selectedAuthors: [],
   selectedTags: [],
   selectedCategory: 'Design',
+  sortOrder: 'desc', // Default to newest first
   // Separate state for Categories page
   categoryPageItems: [],
   categoryPageCategories: [],
@@ -178,6 +180,9 @@ const linksSlice = createSlice({
     setSelectedCategory: (state, action: PayloadAction<string>) => {
       state.selectedCategory = action.payload;
     },
+    setSortOrder: (state, action: PayloadAction<'desc' | 'asc'>) => {
+      state.sortOrder = action.payload;
+    },
     toggleAuthor: (state, action: PayloadAction<string>) => {
       const author = action.payload;
       if (state.selectedAuthors.includes(author)) {
@@ -282,6 +287,7 @@ export const {
   setSelectedAuthors,
   setSelectedTags,
   setSelectedCategory,
+  setSortOrder,
   toggleAuthor,
   toggleTag,
   clearFilters,
