@@ -117,8 +117,8 @@ const LinkCard = ({ link }: { link: LinkItem }) => (
 
     {/* Tags at the bottom */}
     <div className="flex items-center gap-1">
-      {link.tags.slice(0, 2).map((tag) => (
-        <Badge key={tag} variant="secondary" className="bg-muted/50 text-[10px] px-1.5 py-0">
+      {link.tags.slice(0, 3).map((tag) => (
+        <Badge key={tag} variant="secondary" className="bg-muted/50 text-[10px] md:text-xs px-1.5 py-0.5">
           {tag}
         </Badge>
       ))}

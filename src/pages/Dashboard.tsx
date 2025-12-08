@@ -871,69 +871,53 @@ const LinkCard = ({ link }: { link: LinkItem }) => {
   return (
     <article 
       onClick={handleCardClick}
-      className="group relative bg-card/30 backdrop-blur-xl border border-border/50 rounded-xl p-5 shadow-blur hover:shadow-glow hover:border-primary/30 transition-all duration-300 overflow-hidden cursor-pointer"
+      className="group block p-4 rounded-xl bg-card/50 border border-border/50 backdrop-blur-xl hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 cursor-pointer"
     >
-      {/* Subtle glow effect on hover */}
-      <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-5 transition-opacity duration-300" />
-      
-      <div className="relative z-10">
-        {/* Platform badge and external link button */}
-        <div className="flex items-start justify-between mb-3">
+      {/* Platform badge */}
+      <div className="flex items-start justify-between mb-3">
+        <Badge 
+          variant="secondary" 
+          className={`text-[10px] px-1.5 py-0 ${
+            link.platform === "linkedin" 
+              ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20" 
+              : "bg-primary/10 text-primary border-primary/20"
+          }`}
+        >
+          {link.platform === "linkedin" ? "LinkedIn" : "X"}
+        </Badge>
+        <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+
+      {/* Author and Date */}
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+          {link.author}
+        </span>
+        <span className="text-xs text-muted-foreground/50">•</span>
+        <span className="text-xs text-muted-foreground">{formatDate(link.savedAt)}</span>
+      </div>
+
+      {/* Title */}
+      <h3 className="font-medium text-foreground line-clamp-2 group-hover:text-primary transition-colors mb-2">
+        {link.title}
+      </h3>
+
+      {/* Description */}
+      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+        {link.description}
+      </p>
+
+      {/* Tags at the bottom */}
+      <div className="flex items-center gap-1 flex-wrap">
+        {link.tags.slice(0, 3).map((tag) => (
           <Badge 
+            key={tag} 
             variant="secondary" 
-            className={`text-xs ${
-              link.platform === "linkedin" 
-                ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20" 
-                : "bg-primary/10 text-primary border-primary/20"
-            }`}
+            className="bg-muted/50 text-[10px] md:text-xs px-1.5 py-0.5"
           >
-            {link.platform === "linkedin" ? "LinkedIn" : "X"}
+            {tag}
           </Badge>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary/10"
-            onClick={(e) => {
-              e.stopPropagation();
-              window.open(link.url, "_blank", "noopener,noreferrer");
-            }}
-          >
-            <ExternalLink className="w-4 h-4" />
-          </Button>
-        </div>
-
-        {/* Author and Date at the top */}
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
-            {link.author}
-          </span>
-          <span className="text-xs text-muted-foreground/50">•</span>
-          <span className="text-xs text-muted-foreground">{formatDate(link.savedAt)}</span>
-        </div>
-
-        {/* Title */}
-        <h3 className="font-semibold text-base mb-2 text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-          {link.title}
-        </h3>
-
-        {/* Description */}
-        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-          {link.description}
-        </p>
-
-        {/* Tags at the bottom */}
-        <div className="flex flex-wrap gap-1.5">
-          {link.tags.map((tag) => (
-            <Badge 
-              key={tag} 
-              variant="outline" 
-              className="text-xs bg-muted/30 border-border/50"
-            >
-              <Tag className="w-3 h-3 mr-1" />
-              {tag}
-            </Badge>
-          ))}
-        </div>
+        ))}
       </div>
     </article>
   );
