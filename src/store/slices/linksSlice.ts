@@ -6,6 +6,7 @@ export interface LinkItem {
   id: string;
   title: string; // Maps from backend's "topic"
   url: string; // Not in backend response, will use post_link or store separately
+  link: string; // The actual post link from backend
   description: string;
   author: string;
   platform: "linkedin" | "twitter" | "reddit" | "instagram" | "facebook";
@@ -18,7 +19,8 @@ export interface LinkItem {
 const transformPostToLink = (post: Post): LinkItem => ({
   id: post.id.toString(),
   title: "Title always confuses the readers. this post is without a title." + post.topic,
-  url: '', // Backend doesn't return URL in post, we'll need to store it separately or extract from post_link
+  url: post.link, 
+  link: post.link, // The actual post link
   description: post.description,
   author: post.author,
   platform: post.platform === 'x' ? 'twitter' : (post.platform as any), // Map x -> twitter

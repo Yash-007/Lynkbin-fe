@@ -88,7 +88,7 @@ const platformColors: Record<Platform, { bg: string; text: string; border: strin
 
 const LinkCard = ({ link }: { link: LinkItem }) => (
   <a
-    href={link.url}
+    href={link.link || link.url}
     target="_blank"
     rel="noopener noreferrer"
     className="group block p-4 rounded-xl bg-card/50 border border-border/50 backdrop-blur-xl hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"

@@ -4,6 +4,7 @@ import apiClient, { ApiResponse } from '@/lib/api';
 export interface Post {
   id: number;
   user_id: number;
+  link: string;
   platform: string; // "linkedin" or "x" from backend
   author: string;
   category: string;
@@ -135,6 +136,15 @@ export const postsApi = {
     let allTags = tagObjs.flatMap(tagObj => tagObj.tags || []);
     allTags = allTags.filter(tag => tag !== '').map(tag => tag.trim());
     return [...new Set(allTags)]; // Remove duplicates
+  },
+
+  // Get total posts, tags and categories count
+  getTagsAndCategoriesCount: async (): Promise<{ total_posts_count: number; total_tags_count: number; total_categories_count: number }> => {
+    const response = await apiClient.get<ApiResponse<{ total_posts_count: number; total_tags_count: number; total_categories_count: number }>>('/posts/counts');
+    if (!response.data.success) {
+      throw new Error(response.data.message || 'Failed to fetch stats');
+    }
+    return response.data.data;
   },
 };
 

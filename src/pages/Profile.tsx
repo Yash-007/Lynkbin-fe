@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ArrowLeft, Shield, HelpCircle, LogOut, Sparkles, Link2, BarChart3, Globe } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowLeft, Shield, HelpCircle, LogOut, Sparkles, Link2, Tag, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
@@ -8,22 +8,43 @@ import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slices/authSlice";
 import { toast } from "sonner";
+import { postsApi } from "@/services/api/posts";
 
 const Profile = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [activeTab] = useState("linkedin");
   const { user } = useAppSelector((state) => state.auth);
+  const [postsCount, setPostsCount] = useState(0);
+  const [tagsCount, setTagsCount] = useState(0);
+  const [categoriesCount, setCategoriesCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Use actual user data from Redux, fallback to mock data
+  // Fetch posts, tags and categories count
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await postsApi.getTagsAndCategoriesCount();
+        setPostsCount(data.total_posts_count);
+        setTagsCount(data.total_tags_count);
+        setCategoriesCount(data.total_categories_count);
+      } catch (error) {
+        console.error('Failed to fetch stats:', error);
+        toast.error('Failed to load stats');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  // Use actual user data from Redux
   const userData = {
-    name: user?.name || "Alex Johnson",
-    email: user?.email || "alex@example.com",
-    avatar: user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : "AJ",
-    memberSince: user?.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : "Jan 2024",
-    totalLinks: 156,
-    platforms: 5,
-    categories: 8,
+    name: user?.name || "Guest User",
+    email: user?.email || "guest@example.com",
+    avatar: user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : "GU",
+    memberSince: user?.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : "N/A",
   };
 
   const handleLogout = () => {
@@ -33,9 +54,9 @@ const Profile = () => {
   };
 
   const stats = [
-    { label: "Total Links", value: userData.totalLinks, icon: Link2, color: "text-primary" },
-    { label: "Platforms", value: userData.platforms, icon: Globe, color: "text-accent-blue" },
-    { label: "Categories", value: userData.categories, icon: BarChart3, color: "text-platform-instagram" },
+    { label: "Total Posts", value: postsCount, icon: Link2, color: "text-primary" },
+    { label: "Tags", value: tagsCount, icon: Tag, color: "text-accent-blue" },
+    { label: "Categories", value: categoriesCount, icon: BarChart3, color: "text-platform-instagram" },
   ];
 
   const menuSections: Array<{
@@ -104,22 +125,37 @@ const Profile = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-3 gap-4 mb-6">
-          {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="bg-card/50 backdrop-blur-xl rounded-xl border border-border/50 p-4 hover:border-primary/30 transition-all"
-            >
-              <div className={cn("w-10 h-10 rounded-lg bg-gradient-to-br flex items-center justify-center mb-3", 
-                stat.color === "text-primary" ? "from-primary/20 to-primary/5" : 
-                stat.color === "text-accent-blue" ? "from-accent-blue/20 to-accent-blue/5" : 
-                "from-platform-instagram/20 to-platform-instagram/5"
-              )}>
-                <stat.icon className={cn("w-5 h-5", stat.color)} />
+          {isLoading ? (
+            <>
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="bg-card/50 backdrop-blur-xl rounded-xl border border-border/50 p-4 animate-pulse"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-muted mb-3"></div>
+                  <div className="h-8 bg-muted rounded mb-1 w-16"></div>
+                  <div className="h-4 bg-muted rounded w-20"></div>
+                </div>
+              ))}
+            </>
+          ) : (
+            stats.map((stat, index) => (
+              <div
+                key={index}
+                className="bg-card/50 backdrop-blur-xl rounded-xl border border-border/50 p-4 hover:border-primary/30 transition-all"
+              >
+                <div className={cn("w-10 h-10 rounded-lg bg-gradient-to-br flex items-center justify-center mb-3", 
+                  stat.color === "text-primary" ? "from-primary/20 to-primary/5" : 
+                  stat.color === "text-accent-blue" ? "from-accent-blue/20 to-accent-blue/5" : 
+                  "from-platform-instagram/20 to-platform-instagram/5"
+                )}>
+                  <stat.icon className={cn("w-5 h-5", stat.color)} />
+                </div>
+                <p className="text-2xl font-bold text-foreground mb-1">{stat.value}</p>
+                <p className="text-xs text-muted-foreground">{stat.label}</p>
               </div>
-              <p className="text-2xl font-bold text-foreground mb-1">{stat.value}</p>
-              <p className="text-xs text-muted-foreground">{stat.label}</p>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* Menu Sections */}

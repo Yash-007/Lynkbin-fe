@@ -862,8 +862,17 @@ const formatDate = (dateString: string): string => {
 };
 
 const LinkCard = ({ link }: { link: LinkItem }) => {
+  const handleCardClick = () => {
+    if (link.link) {
+      window.open(link.link, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
-    <article className="group relative bg-card/30 backdrop-blur-xl border border-border/50 rounded-xl p-5 shadow-blur hover:shadow-glow hover:border-primary/30 transition-all duration-300 overflow-hidden">
+    <article 
+      onClick={handleCardClick}
+      className="group relative bg-card/30 backdrop-blur-xl border border-border/50 rounded-xl p-5 shadow-blur hover:shadow-glow hover:border-primary/30 transition-all duration-300 overflow-hidden cursor-pointer"
+    >
       {/* Subtle glow effect on hover */}
       <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-5 transition-opacity duration-300" />
       
@@ -884,7 +893,10 @@ const LinkCard = ({ link }: { link: LinkItem }) => {
             variant="ghost"
             size="icon"
             className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary/10"
-            onClick={() => window.open(link.url, "_blank")}
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(link.url, "_blank", "noopener,noreferrer");
+            }}
           >
             <ExternalLink className="w-4 h-4" />
           </Button>
@@ -892,7 +904,7 @@ const LinkCard = ({ link }: { link: LinkItem }) => {
 
         {/* Author and Date at the top */}
         <div className="flex items-center gap-2 mb-3">
-          <span className="text-sm font-semibold text-foreground hover:text-primary transition-colors">
+          <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
             {link.author}
           </span>
           <span className="text-xs text-muted-foreground/50">•</span>
