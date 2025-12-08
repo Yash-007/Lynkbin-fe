@@ -30,9 +30,9 @@ const Index = () => {
             <div className="flex items-center gap-3">
               {isAuthenticated ? (
                 <>
-                  <Button
-                    onClick={() => navigate("/dashboard")}
-                    className="bg-primary hover:bg-primary/90 shadow-blur"
+            <Button
+              onClick={() => navigate("/dashboard")}
+              className="bg-primary hover:bg-primary/90 shadow-blur"
                   >
                     Dashboard
                   </Button>
@@ -58,9 +58,9 @@ const Index = () => {
                   <Button
                     onClick={() => navigate("/auth")}
                     className="bg-primary hover:bg-primary/90 shadow-blur"
-                  >
-                    Get Started
-                  </Button>
+            >
+              Get Started
+            </Button>
                 </>
               )}
             </div>
@@ -157,7 +157,7 @@ const Index = () => {
           <div className="bg-card/30 backdrop-blur-xl rounded-2xl p-8 border border-border/50 shadow-blur hover:shadow-glow hover:border-primary/30 transition-all duration-300">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-lg bg-accent-blue/10 flex items-center justify-center border border-accent-blue/20">
-                <LinkIcon className="w-6 h-6 text-accent-blue" />
+              <LinkIcon className="w-6 h-6 text-accent-blue" />
               </div>
               <div className="w-10 h-10 rounded-lg bg-[#0088cc]/10 flex items-center justify-center border border-[#0088cc]/20">
                 <svg className="w-5 h-5 text-[#0088cc]" fill="currentColor" viewBox="0 0 24 24">

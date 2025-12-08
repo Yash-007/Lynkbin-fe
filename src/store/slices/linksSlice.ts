@@ -103,9 +103,9 @@ export const fetchLinksByPlatform = createAsyncThunk(
 
 export const addLink = createAsyncThunk(
   'links/addLink',
-  async (url: string, { rejectWithValue }) => {
+  async ({ url, tags }: { url: string; tags?: string[] }, { rejectWithValue }) => {
     try {
-      const post = await postsApi.createPost(url);
+      const post = await postsApi.createPost(url, tags);
       return transformPostToLink(post);
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to add link');

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Link as LinkIcon, Sparkles, ArrowLeft } from "lucide-react";
+import { Sparkles, ArrowLeft, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
 import { addLink } from "@/store/slices/linksSlice";
@@ -11,10 +11,32 @@ import { toast } from "sonner";
 
 const PasteBin = () => {
   const [url, setUrl] = useState("");
-  const [notes, setNotes] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const handleAddTag = () => {
+    const trimmedTag = tagInput.trim();
+    if (trimmedTag && tags.length < 3 && !tags.includes(trimmedTag)) {
+      setTags([...tags, trimmedTag]);
+      setTagInput("");
+    } else if (tags.length >= 3) {
+      toast.error("Maximum 3 tags allowed");
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const handleTagInputKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddTag();
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,10 +49,12 @@ const PasteBin = () => {
     setIsProcessing(true);
 
     try {
+      // TODO: Update API to accept tags when backend supports it
       await dispatch(addLink(url)).unwrap();
       toast.success("Link saved successfully! 🎉");
       setUrl("");
-      setNotes("");
+      setTags([]);
+      setTagInput("");
       navigate("/dashboard");
     } catch (error: any) {
       toast.error(error || "Failed to save link. Please try again.");
@@ -94,16 +118,17 @@ const PasteBin = () => {
               <Sparkles className="w-8 h-8 text-primary" />
             </div>
             <h2 className="text-2xl font-bold text-foreground mb-2">
-              Add a New Link
+              Save a Link
             </h2>
-            <p className="text-muted-foreground">
-              Paste any link from LinkedIn or X and we'll extract all the metadata
+            <p className="text-muted-foreground text-sm">
+              Paste any link from LinkedIn or X
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* URL Input */}
             <div className="space-y-2">
-              <Label htmlFor="url" className="text-foreground">Link URL</Label>
+              <Label htmlFor="url" className="text-foreground text-sm">Link URL</Label>
               <Input
                 id="url"
                 type="url"
@@ -115,19 +140,58 @@ const PasteBin = () => {
               />
             </div>
 
+            {/* Tags Input */}
             <div className="space-y-2">
-              <Label htmlFor="notes" className="text-foreground">Notes (Optional)</Label>
-              <Textarea
-                id="notes"
-                placeholder="Add your thoughts or context about this link..."
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                rows={4}
-                className="bg-background/50 border-border/50 resize-none focus-visible:ring-primary"
-              />
+              <Label htmlFor="tags" className="text-foreground text-sm">
+                Tags <span className="text-muted-foreground text-xs">(Optional, max 3)</span>
+              </Label>
+              <div className="flex gap-2">
+                <Input
+                  id="tags"
+                  type="text"
+                  placeholder="Add a tag..."
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={handleTagInputKeyDown}
+                  disabled={tags.length >= 3}
+                  className="bg-background/50 border-border/50 focus-visible:ring-primary"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleAddTag}
+                  disabled={tags.length >= 3 || !tagInput.trim()}
+                  className="bg-card/50 border-border/50 hover:bg-card/80"
+                >
+                  Add
+                </Button>
+              </div>
+              
+              {/* Display added tags */}
+              {tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {tags.map((tag) => (
+                    <Badge 
+                      key={tag} 
+                      variant="secondary" 
+                      className="bg-primary/10 text-primary border-primary/20 text-xs px-2 py-1"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveTag(tag)}
+                        className="ml-1.5 hover:text-primary-dark"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div className="flex gap-3">
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
               <Button
                 type="button"
                 variant="outline"
@@ -152,17 +216,6 @@ const PasteBin = () => {
               </Button>
             </div>
           </form>
-
-          <div className="mt-8 pt-8 border-t border-border/50">
-            <h3 className="font-semibold text-foreground mb-3">
-              Other Ways to Save
-            </h3>
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <p>• Use our browser extension (coming soon)</p>
-              <p>• Send links via Telegram bot @LinkyBinBot</p>
-              <p>• Forward emails to save@linkybin.com</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

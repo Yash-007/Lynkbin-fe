@@ -16,6 +16,7 @@ export interface Post {
 
 export interface CreatePostRequest {
   url: string;
+  tags?: string[];
 }
 
 export interface CreatePostResponse extends Post {
@@ -31,8 +32,12 @@ export interface GetPostsParams {
 
 export const postsApi = {
   // Create a new post by URL
-  createPost: async (url: string): Promise<CreatePostResponse> => {
-    const response = await apiClient.post<ApiResponse<CreatePostResponse>>('/posts', { url });
+  createPost: async (url: string, userTags?: string[]): Promise<CreatePostResponse> => {
+    const payload: CreatePostRequest = { url };
+    if (userTags && userTags.length > 0) {
+      payload.tags = userTags;
+    }
+    const response = await apiClient.post<ApiResponse<CreatePostResponse>>('/posts', payload);
     if (!response.data.success) {
       throw new Error(response.data.message || 'Failed to create post');
     }

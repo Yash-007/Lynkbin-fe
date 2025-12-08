@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { AddLinkModal } from "@/components/AddLinkModal";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slices/authSlice";
@@ -19,6 +20,7 @@ const Profile = () => {
   const [tagsCount, setTagsCount] = useState(0);
   const [categoriesCount, setCategoriesCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [addLinkModalOpen, setAddLinkModalOpen] = useState(false);
   
   // Fetch posts, tags and categories count
   useEffect(() => {
@@ -225,7 +227,14 @@ const Profile = () => {
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <MobileBottomNav activeTab={activeTab} onTabChange={() => {}} />
+      <MobileBottomNav 
+        activeTab={activeTab} 
+        onTabChange={() => {}}
+        onAddLinkClick={() => setAddLinkModalOpen(true)}
+      />
+
+      {/* Add Link Modal */}
+      <AddLinkModal open={addLinkModalOpen} onOpenChange={setAddLinkModalOpen} />
     </div>
   );
 };

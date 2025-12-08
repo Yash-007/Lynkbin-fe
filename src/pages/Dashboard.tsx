@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { AddLinkModal } from "@/components/AddLinkModal";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { 
@@ -48,6 +49,7 @@ const Dashboard = () => {
   const [tagOpen, setTagOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
   const [filtersSheetOpen, setFiltersSheetOpen] = useState(false);
+  const [addLinkModalOpen, setAddLinkModalOpen] = useState(false);
   const [showTelegramBanner, setShowTelegramBanner] = useState(() => {
     return localStorage.getItem("hideTelegramBanner") !== "true";
   });
@@ -183,7 +185,7 @@ const Dashboard = () => {
                 Categories
               </Button>
               <Button 
-                onClick={() => navigate("/paste")} 
+                onClick={() => setAddLinkModalOpen(true)} 
                 className="bg-primary hover:bg-primary/90 shadow-blur"
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -821,7 +823,14 @@ const Dashboard = () => {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <MobileBottomNav activeTab={selectedPlatform} onTabChange={handleTabChange} />
+      <MobileBottomNav 
+        activeTab={selectedPlatform} 
+        onTabChange={handleTabChange}
+        onAddLinkClick={() => setAddLinkModalOpen(true)}
+      />
+
+      {/* Add Link Modal */}
+      <AddLinkModal open={addLinkModalOpen} onOpenChange={setAddLinkModalOpen} />
     </div>
   );
 };

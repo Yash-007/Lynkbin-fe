@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { AddLinkModal } from "@/components/AddLinkModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { 
   fetchCategoryPageData,
@@ -141,6 +142,7 @@ const Categories = () => {
 
   // Local state for selected category
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [addLinkModalOpen, setAddLinkModalOpen] = useState(false);
 
   // Get platform from Redux (synced with Dashboard)
   useEffect(() => {
@@ -335,7 +337,14 @@ const Categories = () => {
       </main>
 
       {/* Mobile Bottom Nav */}
-      <MobileBottomNav activeTab={selectedPlatform} onTabChange={handlePlatformChange} />
+      <MobileBottomNav 
+        activeTab={selectedPlatform} 
+        onTabChange={handlePlatformChange}
+        onAddLinkClick={() => setAddLinkModalOpen(true)}
+      />
+
+      {/* Add Link Modal */}
+      <AddLinkModal open={addLinkModalOpen} onOpenChange={setAddLinkModalOpen} />
     </div>
   );
 };
