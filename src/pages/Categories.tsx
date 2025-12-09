@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Filter, ArrowLeft, ExternalLink, Tag } from "lucide-react";
+import { Filter, ArrowLeft, ExternalLink, Tag, Link as LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
@@ -51,7 +51,7 @@ const formatDate = (dateString: string): string => {
 
 // No more mock data - using API data from Redux
 
-const platforms = ["linkedin", "twitter", "reddit", "instagram", "facebook", "notes"] as const;
+const platforms = ["linkedin", "twitter", "reddit", "instagram", "facebook", "notes", "others"] as const;
 type Platform = typeof platforms[number];
 
 const platformLabels: Record<Platform, string> = {
@@ -61,6 +61,7 @@ const platformLabels: Record<Platform, string> = {
   instagram: "Instagram",
   facebook: "Facebook",
   notes: "Notes",
+  others: "Others",
 };
 
 const platformIcons: Record<Platform, JSX.Element> = {
@@ -82,6 +83,9 @@ const platformIcons: Record<Platform, JSX.Element> = {
   notes: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
     <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-8h8v2H8v-2zm0 4h8v2H8v-2z"/>
   </svg>,
+  others: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+  </svg>,
 };
 
 const platformColors: Record<Platform, { bg: string; text: string; border: string }> = {
@@ -91,6 +95,7 @@ const platformColors: Record<Platform, { bg: string; text: string; border: strin
   instagram: { bg: "bg-platform-instagram/15", text: "text-platform-instagram", border: "border-platform-instagram/30" },
   facebook: { bg: "bg-platform-facebook/15", text: "text-platform-facebook", border: "border-platform-facebook/30" },
   notes: { bg: "bg-purple-500/15", text: "text-purple-500", border: "border-purple-500/30" },
+  others: { bg: "bg-gray-500/15", text: "text-gray-500", border: "border-gray-500/30" },
 };
 
 const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note: LinkItem) => void }) => {
@@ -119,11 +124,13 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
     </div>
 
     {/* Title */}
-    <div className="flex items-start justify-between gap-3 mb-2">
-      <h3 className="font-medium text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+    <div className="flex items-start gap-2 mb-2">
+      <h3 className="font-medium text-foreground line-clamp-2 group-hover:text-primary transition-colors flex-1">
         {link.title}
       </h3>
-      {link.platform !== "notes" && <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />}
+      {link.platform !== "notes" && (
+        <LinkIcon className="w-4 h-4 text-muted-foreground/50 flex-shrink-0 mt-0.5 group-hover:text-primary/70 transition-colors" />
+      )}
     </div>
 
     {/* Description */}

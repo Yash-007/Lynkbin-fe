@@ -8,7 +8,7 @@ export interface LinkItem {
   data: string; // Contains URL for links or full text content for notes
   description: string; // AI-generated summary
   author: string;
-  platform: "linkedin" | "twitter" | "reddit" | "instagram" | "facebook" | "notes";
+  platform: "linkedin" | "twitter" | "reddit" | "instagram" | "facebook" | "notes" | "others";
   tags: string[];
   category: string;
   savedAt: string; // Maps from backend's "created_at"
@@ -17,7 +17,7 @@ export interface LinkItem {
 // Helper function to transform backend Post to frontend LinkItem
 const transformPostToLink = (post: Post): LinkItem => ({
   id: post.id.toString(),
-  title: post.topic ? post.topic : "Title always confuses the readers. this post is without a title.",
+  title: post.topic ? post.topic : post.data,
   data: post.data, // Contains URL for links or text content for notes
   description: post.description,
   author: post.author,

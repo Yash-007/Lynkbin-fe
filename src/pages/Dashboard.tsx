@@ -313,6 +313,12 @@ const Dashboard = () => {
                     </svg>
                     Notes
                   </TabsTrigger>
+                  <TabsTrigger value="others" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-gray-500/25 data-[state=active]:to-gray-500/10 data-[state=active]:text-gray-500 data-[state=active]:shadow-sm transition-all duration-300">
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                    </svg>
+                    Others
+                  </TabsTrigger>
                 </TabsList>
               </div>
 
@@ -911,10 +917,18 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
               ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20" 
               : link.platform === "notes"
               ? "bg-purple-500/10 text-purple-500 border-purple-500/20"
+              : link.platform === "others"
+              ? "bg-gray-500/10 text-gray-500 border-gray-500/20"
               : "bg-primary/10 text-primary border-primary/20"
           }`}
         >
-          {link.platform === "linkedin" ? "LinkedIn" : link.platform === "notes" ? "Note" : "X"}
+          {link.platform === "linkedin" 
+            ? "LinkedIn" 
+            : link.platform === "notes" 
+            ? "Note" 
+            : link.platform === "others"
+            ? "Others"
+            : "X"}
         </Badge>
         <ExternalLink className={`w-4 h-4 text-muted-foreground flex-shrink-0 ${link.platform === "notes" ? "opacity-0" : "opacity-0 group-hover:opacity-100"} transition-opacity`} />
       </div>
@@ -929,9 +943,14 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
       </div>
 
       {/* Title */}
-      <h3 className="font-medium text-foreground line-clamp-2 group-hover:text-primary transition-colors mb-2">
-        {link.title}
-      </h3>
+      <div className="flex items-start gap-2 mb-2">
+        <h3 className="font-medium text-foreground line-clamp-2 group-hover:text-primary transition-colors flex-1">
+          {link.title}
+        </h3>
+        {link.platform !== "notes" && (
+          <LinkIcon className="w-4 h-4 text-muted-foreground/50 flex-shrink-0 mt-0.5 group-hover:text-primary/70 transition-colors" />
+        )}
+      </div>
 
       {/* Description */}
       <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
