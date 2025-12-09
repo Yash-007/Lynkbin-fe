@@ -35,7 +35,7 @@ const Auth = () => {
     e.preventDefault();
     try {
       await dispatch(login(loginData)).unwrap();
-      toast.success("Welcome back! 🎉");
+      toast.success("Welcome back!");
       navigate("/dashboard");
     } catch (err) {
       // Error already handled by effect
