@@ -17,15 +17,15 @@ All colors MUST be HSL.
     --popover: 0 0% 6%;
     --popover-foreground: 0 0% 95%;
 
-    /* Refined Violet/Purple Palette */
-    --primary: 270 75% 62%;
+    /* Refined Dark Blue Palette */
+    --primary: 210 95% 48%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 270 70% 70%;
-    --primary-dark: 270 80% 50%;
-    --primary-glow: 270 85% 75%;
+    --primary-light: 210 90% 58%;
+    --primary-dark: 210 100% 38%;
+    --primary-glow: 210 95% 65%;
     
     /* Platform Colors */
-    --accent-blue: 210 90% 55%;
+    --accent-blue: 210 95% 48%;
     --accent-twitter: 200 90% 55%;
     --accent-reddit: 16 100% 55%;
     --accent-instagram: 330 75% 60%;
@@ -37,7 +37,7 @@ All colors MUST be HSL.
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 60%;
 
-    --accent: 270 75% 62%;
+    --accent: 210 95% 48%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 63% 50%;
@@ -45,21 +45,21 @@ All colors MUST be HSL.
 
     --border: 0 0% 15%;
     --input: 0 0% 15%;
-    --ring: 270 75% 62%;
+    --ring: 210 95% 48%;
 
     --radius: 0.75rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(270 75% 62%), hsl(240 70% 65%));
+    --gradient-primary: linear-gradient(135deg, hsl(210 95% 48%), hsl(200 90% 52%));
     --gradient-subtle: linear-gradient(180deg, hsl(0 0% 5%), hsl(0 0% 4%));
     --gradient-card: linear-gradient(145deg, hsl(0 0% 8% / 0.5), hsl(0 0% 6% / 0.3));
-    --gradient-glow: radial-gradient(circle at 50% 0%, hsl(270 75% 62% / 0.15), transparent 50%);
-    --gradient-violet: linear-gradient(135deg, hsl(270 75% 62%) 0%, hsl(280 70% 58%) 100%);
+    --gradient-glow: radial-gradient(circle at 50% 0%, hsl(210 95% 48% / 0.15), transparent 50%);
+    --gradient-blue: linear-gradient(135deg, hsl(210 95% 48%) 0%, hsl(200 90% 52%) 100%);
     
     --shadow-sm: 0 2px 8px -2px hsl(0 0% 0% / 0.5);
     --shadow-md: 0 4px 16px -4px hsl(0 0% 0% / 0.6);
     --shadow-lg: 0 8px 32px -8px hsl(0 0% 0% / 0.7);
-    --shadow-glow: 0 0 40px hsl(270 75% 62% / 0.3);
-    --shadow-blur: 0 8px 32px -8px hsl(270 75% 62% / 0.2);
+    --shadow-glow: 0 0 40px hsl(210 95% 48% / 0.3);
+    --shadow-blur: 0 8px 32px -8px hsl(210 95% 48% / 0.2);
     
     --blur-sm: blur(8px);
     --blur-md: blur(16px);

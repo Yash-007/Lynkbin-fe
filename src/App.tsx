@@ -19,17 +19,17 @@ const App = () => (
     <Toaster />
     <Sonner />
     <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
+      <Routes>
+        <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/help" element={<HelpCenter />} />
           <Route path="/privacy" element={<PrivacySecurity />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </BrowserRouter>
   </QueryClientProvider>
 );

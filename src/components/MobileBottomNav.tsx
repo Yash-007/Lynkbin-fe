@@ -51,7 +51,7 @@ const platforms = [
     svg: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
       <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-8h8v2H8v-2zm0 4h8v2H8v-2z"/>
     </svg>,
-    color: "text-purple-500"
+    color: "text-blue-500"
   },
   { 
     name: "Others", 

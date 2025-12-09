@@ -307,7 +307,7 @@ const Dashboard = () => {
                     </svg>
                     Facebook
                   </TabsTrigger>
-                  <TabsTrigger value="notes" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500/25 data-[state=active]:to-purple-500/10 data-[state=active]:text-purple-500 data-[state=active]:shadow-sm transition-all duration-300">
+                  <TabsTrigger value="notes" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500/25 data-[state=active]:to-blue-500/10 data-[state=active]:text-blue-500 data-[state=active]:shadow-sm transition-all duration-300">
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-8h8v2H8v-2zm0 4h8v2H8v-2z"/>
                     </svg>
@@ -916,7 +916,7 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
             link.platform === "linkedin" 
               ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20" 
               : link.platform === "notes"
-              ? "bg-purple-500/10 text-purple-500 border-purple-500/20"
+              ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
               : link.platform === "others"
               ? "bg-gray-500/10 text-gray-500 border-gray-500/20"
               : "bg-primary/10 text-primary border-primary/20"

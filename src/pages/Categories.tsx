@@ -94,7 +94,7 @@ const platformColors: Record<Platform, { bg: string; text: string; border: strin
   reddit: { bg: "bg-platform-reddit/15", text: "text-platform-reddit", border: "border-platform-reddit/30" },
   instagram: { bg: "bg-platform-instagram/15", text: "text-platform-instagram", border: "border-platform-instagram/30" },
   facebook: { bg: "bg-platform-facebook/15", text: "text-platform-facebook", border: "border-platform-facebook/30" },
-  notes: { bg: "bg-purple-500/15", text: "text-purple-500", border: "border-purple-500/30" },
+  notes: { bg: "bg-blue-500/15", text: "text-blue-500", border: "border-blue-500/30" },
   others: { bg: "bg-gray-500/15", text: "text-gray-500", border: "border-gray-500/30" },
 };
 

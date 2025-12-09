@@ -69,7 +69,7 @@ export const NotesDetailModal = ({ open, onOpenChange, note }: NotesDetailModalP
                 variant="ghost"
                 size="icon"
                 onClick={handleCopy}
-                className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg hover:bg-purple-500/10 hover:text-purple-500 transition-colors"
+                className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg hover:bg-blue-500/10 hover:text-blue-500 transition-colors"
                 title="Copy note"
               >
                 {copied ? (
