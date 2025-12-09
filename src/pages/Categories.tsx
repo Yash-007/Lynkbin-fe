@@ -194,12 +194,14 @@ const Categories = () => {
     return (categoryPostCounts[b] || 0) - (categoryPostCounts[a] || 0);
   });
 
-  // Set initial category when categories are loaded (use category with most posts)
+  // Set category to first one when categories are loaded and no category is selected
   useEffect(() => {
-    if (sortedCategories.length > 0 && !selectedCategory) {
+    if (sortedCategories.length > 0) {
       setSelectedCategory(sortedCategories[0]);
+    } else {
+      setSelectedCategory("");
     }
-  }, [sortedCategories.length, selectedCategory]);
+  }, [sortedCategories]);
 
   // Show error toast if API call fails
   useEffect(() => {
