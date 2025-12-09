@@ -8,14 +8,15 @@ import { AddLinkModal } from "@/components/AddLinkModal";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout } from "@/store/slices/authSlice";
+import { setSelectedPlatform } from "@/store/slices/linksSlice";
 import { toast } from "sonner";
 import { postsApi } from "@/services/api/posts";
 
 const Profile = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [activeTab] = useState("linkedin");
   const { user } = useAppSelector((state) => state.auth);
+  const { selectedPlatform } = useAppSelector((state) => state.links);
   const [postsCount, setPostsCount] = useState(0);
   const [tagsCount, setTagsCount] = useState(0);
   const [categoriesCount, setCategoriesCount] = useState(0);
@@ -53,6 +54,11 @@ const Profile = () => {
     dispatch(logout());
     toast.success("Logged out successfully!");
     navigate("/");
+  };
+
+  const handlePlatformChange = (platform: string) => {
+    dispatch(setSelectedPlatform(platform));
+    navigate("/dashboard");
   };
 
   const stats = [
@@ -228,8 +234,8 @@ const Profile = () => {
 
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav 
-        activeTab={activeTab} 
-        onTabChange={() => {}}
+        activeTab={selectedPlatform} 
+        onTabChange={handlePlatformChange}
         onAddLinkClick={() => setAddLinkModalOpen(true)}
       />
 
