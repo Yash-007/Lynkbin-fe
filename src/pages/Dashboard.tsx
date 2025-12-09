@@ -152,12 +152,14 @@ const Dashboard = () => {
     setNotesModalOpen(true);
   };
 
-  // Filtered and sorted links
-  const platformFilteredLinks = [...links].sort((a, b) => {
-    const dateA = new Date(a.savedAt).getTime();
-    const dateB = new Date(b.savedAt).getTime();
-    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-  });
+  // Filtered and sorted links by selected platform
+  const platformFilteredLinks = [...links]
+    .filter((link) => link.platform === selectedPlatform)
+    .sort((a, b) => {
+      const dateA = new Date(a.savedAt).getTime();
+      const dateB = new Date(b.savedAt).getTime();
+      return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+    });
 
 
   return (
@@ -323,7 +325,7 @@ const Dashboard = () => {
               </div>
 
               {/* Platform Tab Content */}
-              {["linkedin", "twitter", "reddit", "instagram", "facebook"].map((tab) => (
+              {["linkedin", "twitter", "reddit", "instagram", "facebook", "notes", "others"].map((tab) => (
                 <TabsContent key={tab} value={tab} className="space-y-6">
                   {/* Filters Section */}
                   <div className="flex flex-wrap items-center gap-3">
