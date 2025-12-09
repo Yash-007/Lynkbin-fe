@@ -5,11 +5,10 @@ import { postsApi, Post } from '@/services/api/posts';
 export interface LinkItem {
   id: string;
   title: string; // Maps from backend's "topic"
-  url: string; // Not in backend response, will use post_link or store separately
-  link: string; // The actual post link from backend
-  description: string;
+  data: string; // Contains URL for links or full text content for notes
+  description: string; // AI-generated summary
   author: string;
-  platform: "linkedin" | "twitter" | "reddit" | "instagram" | "facebook";
+  platform: "linkedin" | "twitter" | "reddit" | "instagram" | "facebook" | "notes";
   tags: string[];
   category: string;
   savedAt: string; // Maps from backend's "created_at"
@@ -19,11 +18,10 @@ export interface LinkItem {
 const transformPostToLink = (post: Post): LinkItem => ({
   id: post.id.toString(),
   title: post.topic ? post.topic : "Title always confuses the readers. this post is without a title.",
-  url: post.link, 
-  link: post.link, // The actual post link
+  data: post.data, // Contains URL for links or text content for notes
   description: post.description,
   author: post.author,
-  platform: post.platform === 'x' ? 'twitter' : (post.platform as any), // Map x -> twitter
+  platform: post.platform === 'x' ? 'twitter' : (post.platform as any), // Map x -> twitter, keep notes as notes
   tags: post.tags || [],
   category: post.category,
   savedAt: post.created_at,
@@ -103,9 +101,9 @@ export const fetchLinksByPlatform = createAsyncThunk(
 
 export const addLink = createAsyncThunk(
   'links/addLink',
-  async ({ url, tags }: { url: string; tags?: string[] }, { rejectWithValue }) => {
+  async ({ url, notes, is_url, tags }: { url: string; notes: string; is_url: boolean; tags?: string[] }, { rejectWithValue }) => {
     try {
-      const post = await postsApi.createPost(url, tags);
+      const post = await postsApi.createPost(url, notes, is_url, tags);
       return transformPostToLink(post);
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to add link');
@@ -240,7 +238,6 @@ const linksSlice = createSlice({
 
     // Add link
     builder.addCase(addLink.pending, (state) => {
-      state.isLoading = true;
       state.error = null;
     });
     builder.addCase(addLink.fulfilled, (state, action) => {

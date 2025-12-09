@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { AddLinkModal } from "@/components/AddLinkModal";
+import { NotesDetailModal } from "@/components/NotesDetailModal";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { 
@@ -48,6 +49,8 @@ const Dashboard = () => {
   const [authorOpen, setAuthorOpen] = useState(false);
   const [tagOpen, setTagOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
+  const [notesModalOpen, setNotesModalOpen] = useState(false);
+  const [selectedNote, setSelectedNote] = useState<LinkItem | null>(null);
   const [filtersSheetOpen, setFiltersSheetOpen] = useState(false);
   const [addLinkModalOpen, setAddLinkModalOpen] = useState(false);
   const [showTelegramBanner, setShowTelegramBanner] = useState(() => {
@@ -142,6 +145,11 @@ const Dashboard = () => {
 
   const handleToggleTag = (tag: string) => {
     dispatch(toggleTag(tag));
+  };
+
+  const handleNotesClick = (note: LinkItem) => {
+    setSelectedNote(note);
+    setNotesModalOpen(true);
   };
 
   // Filtered and sorted links
@@ -298,6 +306,12 @@ const Dashboard = () => {
                       <path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/>
                     </svg>
                     Facebook
+                  </TabsTrigger>
+                  <TabsTrigger value="notes" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500/25 data-[state=active]:to-purple-500/10 data-[state=active]:text-purple-500 data-[state=active]:shadow-sm transition-all duration-300">
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-8h8v2H8v-2zm0 4h8v2H8v-2z"/>
+                    </svg>
+                    Notes
                   </TabsTrigger>
                 </TabsList>
               </div>
@@ -505,7 +519,7 @@ const Dashboard = () => {
                         <p className="text-muted-foreground">Loading links...</p>
                       </div>
                     ) : platformFilteredLinks.length > 0 ? (
-                      platformFilteredLinks.map((link) => <LinkCard key={link.id} link={link} />)
+                      platformFilteredLinks.map((link) => <LinkCard key={link.id} link={link} onNotesClick={handleNotesClick} />)
                     ) : (
                       <div className="col-span-full text-center py-12">
                         <p className="text-muted-foreground">No links found. Start by adding your first link!</p>
@@ -812,7 +826,7 @@ const Dashboard = () => {
                   <p className="text-muted-foreground">Loading links...</p>
                 </div>
               ) : platformFilteredLinks.length > 0 ? (
-                platformFilteredLinks.map((link) => <LinkCard key={link.id} link={link} />)
+                platformFilteredLinks.map((link) => <LinkCard key={link.id} link={link} onNotesClick={handleNotesClick} />)
               ) : (
                 <div className="text-center py-12">
                   <p className="text-muted-foreground">No links found. Start by adding your first link!</p>
@@ -831,6 +845,9 @@ const Dashboard = () => {
 
       {/* Add Link Modal */}
       <AddLinkModal open={addLinkModalOpen} onOpenChange={setAddLinkModalOpen} />
+      
+      {/* Notes Detail Modal */}
+      <NotesDetailModal open={notesModalOpen} onOpenChange={setNotesModalOpen} note={selectedNote} />
     </div>
   );
 };
@@ -870,10 +887,13 @@ const formatDate = (dateString: string): string => {
   }
 };
 
-const LinkCard = ({ link }: { link: LinkItem }) => {
+const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note: LinkItem) => void }) => {
   const handleCardClick = () => {
-    if (link.link) {
-      window.open(link.link, "_blank", "noopener,noreferrer");
+    if (link.platform === "notes" && onNotesClick) {
+      onNotesClick(link);
+    } else if (link.data) {
+      // For links, data contains the URL
+      window.open(link.data, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -889,12 +909,14 @@ const LinkCard = ({ link }: { link: LinkItem }) => {
           className={`text-[10px] px-1.5 py-0 ${
             link.platform === "linkedin" 
               ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20" 
+              : link.platform === "notes"
+              ? "bg-purple-500/10 text-purple-500 border-purple-500/20"
               : "bg-primary/10 text-primary border-primary/20"
           }`}
         >
-          {link.platform === "linkedin" ? "LinkedIn" : "X"}
+          {link.platform === "linkedin" ? "LinkedIn" : link.platform === "notes" ? "Note" : "X"}
         </Badge>
-        <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <ExternalLink className={`w-4 h-4 text-muted-foreground flex-shrink-0 ${link.platform === "notes" ? "opacity-0" : "opacity-0 group-hover:opacity-100"} transition-opacity`} />
       </div>
 
       {/* Author and Date */}

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { AddLinkModal } from "@/components/AddLinkModal";
+import { NotesDetailModal } from "@/components/NotesDetailModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { 
   fetchCategoryPageData,
@@ -50,7 +51,7 @@ const formatDate = (dateString: string): string => {
 
 // No more mock data - using API data from Redux
 
-const platforms = ["linkedin", "twitter", "reddit", "instagram", "facebook"] as const;
+const platforms = ["linkedin", "twitter", "reddit", "instagram", "facebook", "notes"] as const;
 type Platform = typeof platforms[number];
 
 const platformLabels: Record<Platform, string> = {
@@ -59,6 +60,7 @@ const platformLabels: Record<Platform, string> = {
   reddit: "Reddit",
   instagram: "Instagram",
   facebook: "Facebook",
+  notes: "Notes",
 };
 
 const platformIcons: Record<Platform, JSX.Element> = {
@@ -77,6 +79,9 @@ const platformIcons: Record<Platform, JSX.Element> = {
   facebook: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
     <path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/>
   </svg>,
+  notes: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-8h8v2H8v-2zm0 4h8v2H8v-2z"/>
+  </svg>,
 };
 
 const platformColors: Record<Platform, { bg: string; text: string; border: string }> = {
@@ -85,15 +90,25 @@ const platformColors: Record<Platform, { bg: string; text: string; border: strin
   reddit: { bg: "bg-platform-reddit/15", text: "text-platform-reddit", border: "border-platform-reddit/30" },
   instagram: { bg: "bg-platform-instagram/15", text: "text-platform-instagram", border: "border-platform-instagram/30" },
   facebook: { bg: "bg-platform-facebook/15", text: "text-platform-facebook", border: "border-platform-facebook/30" },
+  notes: { bg: "bg-purple-500/15", text: "text-purple-500", border: "border-purple-500/30" },
 };
 
-const LinkCard = ({ link }: { link: LinkItem }) => (
-  <a
-    href={link.link || link.url}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="group block p-4 rounded-xl bg-card/50 border border-border/50 backdrop-blur-xl hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
-  >
+const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note: LinkItem) => void }) => {
+  const handleClick = (e: React.MouseEvent) => {
+    if (link.platform === "notes" && onNotesClick) {
+      e.preventDefault();
+      onNotesClick(link);
+    }
+  };
+
+  return (
+    <a
+      href={link.platform === "notes" ? "#" : link.data}
+      target={link.platform === "notes" ? undefined : "_blank"}
+      rel={link.platform === "notes" ? undefined : "noopener noreferrer"}
+      onClick={handleClick}
+      className="group block p-4 rounded-xl bg-card/50 border border-border/50 backdrop-blur-xl hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+    >
     {/* Author and Date at the top */}
     <div className="flex items-center gap-2 mb-3">
       <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
@@ -108,7 +123,7 @@ const LinkCard = ({ link }: { link: LinkItem }) => (
       <h3 className="font-medium text-foreground line-clamp-2 group-hover:text-primary transition-colors">
         {link.title}
       </h3>
-      <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+      {link.platform !== "notes" && <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />}
     </div>
 
     {/* Description */}
@@ -125,7 +140,8 @@ const LinkCard = ({ link }: { link: LinkItem }) => (
       ))}
     </div>
   </a>
-);
+  );
+};
 
 const Categories = () => {
   const dispatch = useAppDispatch();
@@ -143,6 +159,8 @@ const Categories = () => {
   // Local state for selected category
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [addLinkModalOpen, setAddLinkModalOpen] = useState(false);
+  const [notesModalOpen, setNotesModalOpen] = useState(false);
+  const [selectedNote, setSelectedNote] = useState<LinkItem | null>(null);
 
   // Get platform from Redux (synced with Dashboard)
   useEffect(() => {
@@ -186,6 +204,11 @@ const Categories = () => {
   // Handler for platform change from mobile nav
   const handlePlatformChange = (platform: string) => {
     dispatch(setSelectedPlatform(platform));
+  };
+
+  const handleNotesClick = (note: LinkItem) => {
+    setSelectedNote(note);
+    setNotesModalOpen(true);
   };
 
   // Filter by category (all posts for the platform, no Dashboard filters)
@@ -322,7 +345,7 @@ const Categories = () => {
               </div>
             ) : filteredLinks.length > 0 ? (
               filteredLinks.map((link) => (
-                <LinkCard key={link.id} link={link} />
+                <LinkCard key={link.id} link={link} onNotesClick={handleNotesClick} />
               ))
             ) : (
               <div className="col-span-full text-center py-12">
@@ -345,6 +368,9 @@ const Categories = () => {
 
       {/* Add Link Modal */}
       <AddLinkModal open={addLinkModalOpen} onOpenChange={setAddLinkModalOpen} />
+      
+      {/* Notes Detail Modal */}
+      <NotesDetailModal open={notesModalOpen} onOpenChange={setNotesModalOpen} note={selectedNote} />
     </div>
   );
 };

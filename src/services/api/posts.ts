@@ -4,8 +4,8 @@ import apiClient, { ApiResponse } from '@/lib/api';
 export interface Post {
   id: number;
   user_id: number;
-  link: string;
-  platform: string; // "linkedin" or "x" from backend
+  data: string; // Contains URL for links or text content for notes
+  platform: string; // "linkedin", "x", or "notes" from backend
   author: string;
   category: string;
   topic: string; // This is the title
@@ -16,6 +16,8 @@ export interface Post {
 
 export interface CreatePostRequest {
   url: string;
+  notes: string;
+  is_url: boolean;
   tags?: string[];
 }
 
@@ -31,9 +33,13 @@ export interface GetPostsParams {
 }
 
 export const postsApi = {
-  // Create a new post by URL
-  createPost: async (url: string, userTags?: string[]): Promise<CreatePostResponse> => {
-    const payload: CreatePostRequest = { url };
+  // Create a new post by URL or notes
+  createPost: async (url: string, notes: string, isUrl: boolean, userTags?: string[]): Promise<CreatePostResponse> => {
+    const payload: CreatePostRequest = { 
+      url, 
+      notes, 
+      is_url: isUrl 
+    };
     if (userTags && userTags.length > 0) {
       payload.tags = userTags;
     }

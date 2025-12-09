@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Sparkles, X as XIcon } from "lucide-react";
+import { Sparkles, X as XIcon, Link2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -21,10 +23,11 @@ interface AddLinkModalProps {
 }
 
 export const AddLinkModal = ({ open, onOpenChange }: AddLinkModalProps) => {
+  const [activeTab, setActiveTab] = useState<"link" | "notes">("link");
   const [url, setUrl] = useState("");
+  const [notes, setNotes] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
   const dispatch = useAppDispatch();
 
   const handleAddTag = () => {
@@ -51,37 +54,81 @@ export const AddLinkModal = ({ open, onOpenChange }: AddLinkModalProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!url.trim()) {
+    const isUrl = activeTab === "link";
+    
+    if (isUrl && !url.trim()) {
       toast.error("Please enter a valid URL");
       return;
     }
+    
+    if (!isUrl && !notes.trim()) {
+      toast.error("Please enter some notes");
+      return;
+    }
 
-    setIsProcessing(true);
+    // Close modal immediately
+    onOpenChange(false);
+    
+    // Reset form immediately
+    const urlToSubmit = url;
+    const notesToSubmit = notes;
+    const tagsToSubmit = tags.length > 0 ? [...tags] : undefined;
+    setUrl("");
+    setNotes("");
+    setTags([]);
+    setTagInput("");
+    setActiveTab("link");
 
+    // Show loading toast with nice indicator and close icon
+    const loadingMessage = isUrl 
+      ? "Your link will be saved in a few seconds..." 
+      : "Your notes will be saved in a few seconds...";
+    
+    toast.loading(loadingMessage, {
+      id: 'saving-link',
+      dismissible: true, // Shows X icon to close
+    });
+
+    // Process in background
     try {
-      const escapedUrl = encodeURIComponent(url);
-      await dispatch(addLink({ url: escapedUrl, tags: tags.length > 0 ? tags : undefined })).unwrap();
-      toast.success("Link saved successfully! 🎉");
+      if (isUrl) {
+        const escapedUrl = encodeURIComponent(urlToSubmit);
+        await dispatch(addLink({ 
+          url: escapedUrl, 
+          notes: "", 
+          is_url: true, 
+          tags: tagsToSubmit 
+        })).unwrap();
+      } else {
+        await dispatch(addLink({ 
+          url: "", 
+          notes: notesToSubmit, 
+          is_url: false, 
+          tags: tagsToSubmit 
+        })).unwrap();
+      }
       
-      // Reset form and close modal
-      setUrl("");
-      setTags([]);
-      setTagInput("");
-      onOpenChange(false);
+      // Dismiss loading toast and show success
+      toast.dismiss('saving-link');
+      const successMessage = isUrl ? "Link saved successfully!" : "Notes saved successfully!";
+      toast.success(successMessage);
     } catch (error: any) {
-      toast.error(error || "Failed to save link. Please try again.");
-    } finally {
-      setIsProcessing(false);
+      // Dismiss loading toast and show error
+      toast.dismiss('saving-link');
+      const errorMessage = isUrl 
+        ? "Failed to save link. Please try again." 
+        : "Failed to save notes. Please try again.";
+      toast.error(error || errorMessage);
     }
   };
 
   const handleClose = () => {
-    if (!isProcessing) {
-      setUrl("");
-      setTags([]);
-      setTagInput("");
-      onOpenChange(false);
-    }
+    setUrl("");
+    setNotes("");
+    setTags([]);
+    setTagInput("");
+    setActiveTab("link");
+    onOpenChange(false);
   };
 
   return (
@@ -92,30 +139,60 @@ export const AddLinkModal = ({ open, onOpenChange }: AddLinkModalProps) => {
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             </div>
-            Save a Link
+            Save Content
           </DialogTitle>
           <DialogDescription className="text-muted-foreground text-sm">
-            Paste any link from LinkedIn or X
+            Save a link from LinkedIn/X or add your own notes
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 mt-3 sm:mt-4">
-          {/* URL Input */}
-          <div className="space-y-2">
-            <Label htmlFor="modal-url" className="text-foreground text-sm">
-              Link URL
-            </Label>
-            <Input
-              id="modal-url"
-              type="url"
-              placeholder="https://linkedin.com/pulse/..."
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              required
-              className="bg-background/50 border-border/50 focus-visible:ring-primary text-sm sm:text-base h-10 sm:h-11"
-              autoFocus
-            />
-          </div>
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "link" | "notes")} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-muted/50">
+              <TabsTrigger value="link" className="flex items-center gap-2 data-[state=active]:bg-background">
+                <Link2 className="w-4 h-4" />
+                <span className="hidden sm:inline">Link</span>
+              </TabsTrigger>
+              <TabsTrigger value="notes" className="flex items-center gap-2 data-[state=active]:bg-background">
+                <FileText className="w-4 h-4" />
+                <span className="hidden sm:inline">Notes</span>
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="link" className="space-y-4 mt-4">
+              {/* URL Input */}
+              <div className="space-y-2">
+                <Label htmlFor="modal-url" className="text-foreground text-sm">
+                  Link URL
+                </Label>
+                <Input
+                  id="modal-url"
+                  type="url"
+                  placeholder="https://linkedin.com/pulse/..."
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  className="bg-background/50 border-border/50 focus-visible:ring-primary text-sm sm:text-base h-10 sm:h-11"
+                />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="notes" className="space-y-4 mt-4">
+              {/* Notes Input */}
+              <div className="space-y-2">
+                <Label htmlFor="modal-notes" className="text-foreground text-sm">
+                  Your Notes
+                </Label>
+                <Textarea
+                  id="modal-notes"
+                  placeholder="Write your thoughts, ideas, or any content you want to save..."
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="bg-background/50 border-border/50 focus-visible:ring-primary text-sm sm:text-base min-h-[120px] resize-none"
+                  rows={6}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
 
           {/* Tags Input */}
           <div className="space-y-2">
@@ -174,24 +251,14 @@ export const AddLinkModal = ({ open, onOpenChange }: AddLinkModalProps) => {
               variant="outline"
               className="flex-1 bg-card/50 border-border/50 hover:bg-card/80 h-10 sm:h-11 text-sm sm:text-base"
               onClick={handleClose}
-              disabled={isProcessing}
             >
               Cancel
             </Button>
             <Button
               type="submit"
               className="flex-1 bg-primary hover:bg-primary/90 shadow-blur h-10 sm:h-11 text-sm sm:text-base"
-              disabled={isProcessing}
             >
-              {isProcessing ? (
-                <>
-                  <Sparkles className="w-4 h-4 mr-2 animate-spin" />
-                  <span className="hidden sm:inline">Processing...</span>
-                  <span className="sm:hidden">Saving...</span>
-                </>
-              ) : (
-                "Save Link"
-              )}
+              {activeTab === "link" ? "Save Link" : "Save Notes"}
             </Button>
           </div>
         </form>
