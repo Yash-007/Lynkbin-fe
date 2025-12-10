@@ -29,22 +29,23 @@ const platforms = [
     </svg>,
     color: "text-platform-reddit"
   },
-  { 
-    name: "Instagram", 
-    value: "instagram", 
-    svg: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm4.25 4a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm4.5-2.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/>
-    </svg>,
-    color: "text-platform-instagram"
-  },
-  { 
-    name: "Facebook", 
-    value: "facebook", 
-    svg: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/>
-    </svg>,
-    color: "text-platform-facebook"
-  },
+  // Instagram and Facebook - Not supported yet
+  // { 
+  //   name: "Instagram", 
+  //   value: "instagram", 
+  //   svg: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+  //     <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm4.25 4a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm4.5-2.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/>
+  //   </svg>,
+  //   color: "text-platform-instagram"
+  // },
+  // { 
+  //   name: "Facebook", 
+  //   value: "facebook", 
+  //   svg: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+  //     <path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/>
+  //   </svg>,
+  //   color: "text-platform-facebook"
+  // },
   { 
     name: "Notes", 
     value: "notes", 

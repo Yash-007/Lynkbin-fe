@@ -297,7 +297,8 @@ const Dashboard = () => {
                     </svg>
                     Reddit
                   </TabsTrigger>
-                  <TabsTrigger value="instagram" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-platform-instagram/25 data-[state=active]:to-platform-instagram/10 data-[state=active]:text-platform-instagram data-[state=active]:shadow-sm transition-all duration-300">
+                  {/* Instagram and Facebook - Not supported yet */}
+                  {/* <TabsTrigger value="instagram" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-platform-instagram/25 data-[state=active]:to-platform-instagram/10 data-[state=active]:text-platform-instagram data-[state=active]:shadow-sm transition-all duration-300">
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm4.25 4a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm4.5-2.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/>
                     </svg>
@@ -308,7 +309,7 @@ const Dashboard = () => {
                       <path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/>
                     </svg>
                     Facebook
-                  </TabsTrigger>
+                  </TabsTrigger> */}
                   <TabsTrigger value="notes" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500/25 data-[state=active]:to-blue-500/10 data-[state=active]:text-blue-500 data-[state=active]:shadow-sm transition-all duration-300">
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-8h8v2H8v-2zm0 4h8v2H8v-2z"/>
@@ -325,7 +326,7 @@ const Dashboard = () => {
               </div>
 
               {/* Platform Tab Content */}
-              {["linkedin", "twitter", "reddit", "instagram", "facebook", "notes", "others"].map((tab) => (
+              {["linkedin", "twitter", "reddit", /* "instagram", "facebook", */ "notes", "others"].map((tab) => (
                 <TabsContent key={tab} value={tab} className="space-y-6">
                   {/* Filters Section */}
                   <div className="flex flex-wrap items-center gap-3">
@@ -573,7 +574,8 @@ const Dashboard = () => {
                     <span>Reddit</span>
                   </>
                 )}
-                {selectedPlatform === "instagram" && (
+                {/* Instagram and Facebook - Not supported yet */}
+                {/* {selectedPlatform === "instagram" && (
                   <>
                     <div className="p-2 rounded-lg bg-gradient-to-br from-platform-instagram/25 to-platform-instagram/10">
                       <svg className="w-5 h-5 text-platform-instagram" fill="currentColor" viewBox="0 0 24 24">
@@ -592,7 +594,7 @@ const Dashboard = () => {
                     </div>
                     <span>Facebook</span>
                   </>
-                )}
+                )} */}
                 {selectedPlatform === "notes" && (
                   <>
                     <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500/25 to-blue-500/10">
@@ -937,6 +939,15 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
           className={`text-[10px] px-1.5 py-0 ${
             link.platform === "linkedin" 
               ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20" 
+              : link.platform === "twitter"
+              ? "bg-platform-twitter/10 text-platform-twitter border-platform-twitter/20"
+              : link.platform === "reddit"
+              ? "bg-platform-reddit/10 text-platform-reddit border-platform-reddit/20"
+              // Instagram and Facebook - Not supported yet
+              // : link.platform === "instagram"
+              // ? "bg-platform-instagram/10 text-platform-instagram border-platform-instagram/20"
+              // : link.platform === "facebook"
+              // ? "bg-platform-facebook/10 text-platform-facebook border-platform-facebook/20"
               : link.platform === "notes"
               ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
               : link.platform === "others"
@@ -946,11 +957,19 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
         >
           {link.platform === "linkedin" 
             ? "LinkedIn" 
+            : link.platform === "twitter"
+            ? "X"
+            : link.platform === "reddit"
+            ? "Reddit"
+            // Instagram and Facebook - Not supported yet
+            // : link.platform === "instagram"
+            // ? "Instagram"
+            // : link.platform === "facebook"
+            // ? "Facebook"
             : link.platform === "notes" 
             ? "Note" 
-            : link.platform === "others"
-            ? "Others"
-            : "X"}
+            : "Others"
+          }
         </Badge>
         <ExternalLink className={`w-4 h-4 text-muted-foreground flex-shrink-0 ${link.platform === "notes" ? "opacity-0" : "opacity-0 group-hover:opacity-100"} transition-opacity`} />
       </div>
