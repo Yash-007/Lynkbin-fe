@@ -152,7 +152,7 @@ export const MobileBottomNav = ({ activeTab, onTabChange, onAddLinkClick }: Mobi
             <Grid3x3 className="w-5 h-5" />
             <span className="text-[10px] font-medium">Categories</span>
           </NavLink>
-          
+
           {/* Profile */}
           <NavLink
             to="/profile"

@@ -171,18 +171,26 @@ const Dashboard = () => {
       <header className="sticky top-0 z-20 border-b border-border/50 bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary via-primary-light to-primary-dark flex items-center justify-center shadow-lg shadow-primary/30">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+            <div className="flex items-center gap-3 group cursor-pointer" onClick={() => navigate("/")}>
+              {/* Enhanced Logo Icon with Dark Theme */}
+              <div className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155] flex items-center justify-center shadow-xl shadow-primary/20 group-hover:shadow-primary/40 transition-all duration-300 overflow-hidden">
+                {/* Animated background glow */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary-dark/10 opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                {/* Link icon with animation */}
+                <svg className="relative z-10 w-6 h-6 text-primary group-hover:text-primary-light transition-all duration-300 group-hover:scale-110 group-hover:rotate-[-5deg]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
                 </svg>
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/20 to-transparent opacity-40"></div>
+                
+                {/* Shine overlay */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/0 via-white/5 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
+              
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                <h1 className="font-display text-xl font-bold bg-gradient-to-r from-foreground via-primary-light to-foreground bg-clip-text text-transparent tracking-tight group-hover:from-primary group-hover:via-primary-light group-hover:to-primary transition-all duration-300">
                   LynkBin
-                </h1>
-                <p className="text-[10px] text-muted-foreground -mt-0.5">Your Knowledge Hub</p>
+              </h1>
+                <p className="text-[10px] text-muted-foreground -mt-0.5 group-hover:text-primary/70 transition-colors duration-300">Your Knowledge Hub</p>
               </div>
             </div>
             <div className="hidden md:flex items-center gap-3">
@@ -194,13 +202,13 @@ const Dashboard = () => {
                 <Grid3x3 className="w-4 h-4 mr-2" />
                 Categories
               </Button>
-              <Button 
+            <Button 
                 onClick={() => setAddLinkModalOpen(true)} 
                 className="bg-primary hover:bg-primary/90 shadow-blur"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Link
-              </Button>
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Link
+            </Button>
               <Button 
                 onClick={() => window.open('https://t.me/lynkbin_bot', '_blank')}
                 variant="outline"
@@ -350,12 +358,12 @@ const Dashboard = () => {
                       </PopoverTrigger>
                       <PopoverContent className="w-[200px] p-2 bg-popover border-border" align="start">
                         <div className="space-y-1 max-h-[300px] overflow-y-auto">
-                          {availableAuthors.map((author) => (
+                              {availableAuthors.map((author) => (
                             <button
-                              key={author}
+                                  key={author}
                               onClick={() => handleToggleAuthor(author)}
                               className="flex items-center w-full px-2 py-1.5 text-sm rounded hover:bg-accent hover:text-accent-foreground transition-colors"
-                            >
+                                >
                               <div className={cn(
                                 "mr-2 flex h-4 w-4 items-center justify-center rounded border",
                                 selectedAuthors.includes(author)
@@ -393,9 +401,9 @@ const Dashboard = () => {
                       </PopoverTrigger>
                       <PopoverContent className="w-[200px] p-2 bg-popover border-border" align="start">
                         <div className="space-y-1 max-h-[300px] overflow-y-auto">
-                          {availableTags.map((tag) => (
+                              {availableTags.map((tag) => (
                             <button
-                              key={tag}
+                                  key={tag}
                               onClick={() => handleToggleTag(tag)}
                               className="flex items-center w-full px-2 py-1.5 text-sm rounded hover:bg-accent hover:text-accent-foreground transition-colors"
                             >
@@ -440,9 +448,9 @@ const Dashboard = () => {
                             onClick={() => {
                               dispatch(setSortOrder('desc'));
                               setSortOpen(false);
-                            }}
+                                  }}
                             className="flex items-center w-full px-2 py-1.5 text-sm rounded hover:bg-accent hover:text-accent-foreground transition-colors"
-                          >
+                                >
                             <div className={cn(
                               "mr-2 flex h-4 w-4 items-center justify-center rounded border",
                               sortOrder === 'desc'
@@ -633,10 +641,10 @@ const Dashboard = () => {
                 {/* Filters Sheet Trigger */}
                 <Sheet open={filtersSheetOpen} onOpenChange={setFiltersSheetOpen}>
                   <SheetTrigger asChild>
-                    <Button
-                      variant="outline"
+                  <Button
+                    variant="outline"
                       className="flex-1 justify-between bg-card/50 border-border/50 hover:bg-card/80 backdrop-blur-xl"
-                    >
+                  >
                       <span className="flex items-center gap-2">
                         <Filter className="h-4 w-4" />
                         <span>Filters & Sort</span>
@@ -644,12 +652,12 @@ const Dashboard = () => {
                           <Badge variant="secondary" className="bg-primary/20 text-primary h-5 px-1.5 text-xs">
                             {selectedAuthors.length + selectedTags.length}
                           </Badge>
-                        )}
+                    )}
                       </span>
                       <svg className="h-4 w-4 shrink-0 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
-                    </Button>
+                  </Button>
                   </SheetTrigger>
 
                   <SheetContent side="bottom" className="h-[85vh] bg-background/95 backdrop-blur-xl border-t border-border">
@@ -685,7 +693,7 @@ const Dashboard = () => {
                         <div className="space-y-2">
                           <button
                             onClick={() => dispatch(setSortOrder('desc'))}
-                            className={cn(
+                              className={cn(
                               "flex items-center w-full px-4 py-3 text-sm rounded-lg border transition-all",
                               sortOrder === 'desc'
                                 ? "bg-primary/10 border-primary/30 text-primary font-medium"
@@ -783,10 +791,10 @@ const Dashboard = () => {
                           {availableTags.length > 0 ? (
                             availableTags.map((tag) => (
                               <button
-                                key={tag}
+                            key={tag}
                                 onClick={() => handleToggleTag(tag)}
                                 className="flex items-center w-full px-3 py-2.5 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
-                              >
+                          >
                                 <div className={cn(
                                   "mr-3 flex h-4 w-4 items-center justify-center rounded border",
                                   selectedTags.includes(tag)
@@ -833,7 +841,7 @@ const Dashboard = () => {
                       key={tag} 
                       variant="secondary" 
                       className="bg-primary/10 text-primary border-primary/20 gap-1.5 pr-1"
-                    >
+                >
                       <Tag className="h-3 w-3" />
                       <span className="truncate max-w-[120px]">{tag}</span>
                       <button
@@ -933,12 +941,12 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
       className="group block p-4 rounded-xl bg-card/50 border border-border/50 backdrop-blur-xl hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 cursor-pointer"
     >
       {/* Platform badge */}
-      <div className="flex items-start justify-between mb-3">
-        <Badge 
-          variant="secondary" 
+        <div className="flex items-start justify-between mb-3">
+          <Badge 
+            variant="secondary" 
           className={`text-[10px] px-1.5 py-0 ${
-            link.platform === "linkedin" 
-              ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20" 
+              link.platform === "linkedin" 
+                ? "bg-accent-blue/10 text-accent-blue border-accent-blue/20" 
               : link.platform === "twitter"
               ? "bg-platform-twitter/10 text-platform-twitter border-platform-twitter/20"
               : link.platform === "reddit"
@@ -952,9 +960,9 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
               ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
               : link.platform === "others"
               ? "bg-gray-500/10 text-gray-500 border-gray-500/20"
-              : "bg-primary/10 text-primary border-primary/20"
-          }`}
-        >
+                : "bg-primary/10 text-primary border-primary/20"
+            }`}
+          >
           {link.platform === "linkedin" 
             ? "LinkedIn" 
             : link.platform === "twitter"
@@ -970,7 +978,7 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
             ? "Note" 
             : "Others"
           }
-        </Badge>
+          </Badge>
         <ExternalLink className={`w-4 h-4 text-muted-foreground flex-shrink-0 ${link.platform === "notes" ? "opacity-0" : "opacity-0 group-hover:opacity-100"} transition-opacity`} />
       </div>
 
@@ -981,7 +989,7 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
         </span>
         <span className="text-xs text-muted-foreground/50">•</span>
         <span className="text-xs text-muted-foreground">{formatDate(link.savedAt)}</span>
-      </div>
+        </div>
 
       {/* Title */}
       <div className="flex items-start gap-2 mb-2">
@@ -995,20 +1003,20 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
 
       {/* Description */}
       <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-        {link.description}
-      </p>
+          {link.description}
+        </p>
 
       {/* Tags at the bottom */}
       <div className="flex items-center gap-1 flex-wrap">
         {link.tags.slice(0, 3).map((tag) => (
-          <Badge 
-            key={tag} 
+            <Badge 
+              key={tag} 
             variant="secondary" 
             className="bg-muted/50 text-[10px] md:text-xs px-1.5 py-0.5"
-          >
-            {tag}
-          </Badge>
-        ))}
+            >
+              {tag}
+            </Badge>
+          ))}
       </div>
     </article>
   );

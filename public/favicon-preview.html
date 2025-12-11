@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favicon Preview</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: #0a0a0a;
+            font-family: system-ui, -apple-system, sans-serif;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            margin-bottom: 40px;
+            color: #3B82F6;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .preview-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+        }
+        .preview-card h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #3B82F6;
+        }
+        .preview-card p {
+            color: #888;
+            font-size: 14px;
+        }
+        .icon-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        .dark-bg {
+            background: #111;
+        }
+        .light-bg {
+            background: #f5f5f5;
+        }
+        .tab-simulation {
+            background: #2d2d2d;
+            padding: 10px 15px;
+            border-radius: 8px 8px 0 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .tab-simulation img {
+            width: 16px;
+            height: 16px;
+        }
+        .tab-simulation span {
+            color: #aaa;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Favicon Preview - LynkBin</h1>
+        
+        <div class="preview-grid">
+            <div class="preview-card">
+                <div class="icon-wrapper dark-bg">
+                    <img src="favicon.svg" width="32" height="32" alt="Favicon">
+                </div>
+                <h3>32x32 (Dark)</h3>
+                <p>Standard favicon size on dark background</p>
+            </div>
+            
+            <div class="preview-card">
+                <div class="icon-wrapper light-bg">
+                    <img src="favicon.svg" width="32" height="32" alt="Favicon">
+                </div>
+                <h3>32x32 (Light)</h3>
+                <p>Standard favicon size on light background</p>
+            </div>
+            
+            <div class="preview-card">
+                <div class="icon-wrapper dark-bg">
+                    <img src="favicon.svg" width="64" height="64" alt="Favicon">
+                </div>
+                <h3>64x64 (Scaled)</h3>
+                <p>Enlarged view</p>
+            </div>
+            
+            <div class="preview-card">
+                <div class="icon-wrapper dark-bg">
+                    <img src="favicon.svg" width="16" height="16" alt="Favicon">
+                </div>
+                <h3>16x16 (Tiny)</h3>
+                <p>Browser tab size</p>
+            </div>
+        </div>
+        
+        <div class="preview-card">
+            <h3>Browser Tab Simulation</h3>
+            <div class="tab-simulation">
+                <img src="favicon.svg" alt="Favicon">
+                <span>LynkBin - Your Personal Knowledge Vault</span>
+            </div>
+        </div>
+        
+        <div class="preview-card" style="margin-top: 30px;">
+            <h3>Large Logo Preview (512x512)</h3>
+            <div class="icon-wrapper dark-bg" style="padding: 40px;">
+                <img src="lynkbin-logo.svg" width="128" height="128" alt="Large Logo">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

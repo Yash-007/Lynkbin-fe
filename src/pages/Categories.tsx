@@ -110,13 +110,13 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
   };
 
   return (
-    <a
+  <a
       href={link.platform === "notes" ? "#" : link.data}
       target={link.platform === "notes" ? undefined : "_blank"}
       rel={link.platform === "notes" ? undefined : "noopener noreferrer"}
       onClick={handleClick}
-      className="group block p-4 rounded-xl bg-card/50 border border-border/50 backdrop-blur-xl hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
-    >
+    className="group block p-4 rounded-xl bg-card/50 border border-border/50 backdrop-blur-xl hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+  >
     {/* Author and Date at the top */}
     <div className="flex items-center gap-2 mb-3">
       <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
@@ -142,21 +142,21 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
     </p>
 
     {/* Tags at the bottom */}
-    <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1">
       {link.tags.slice(0, 3).map((tag) => (
         <Badge key={tag} variant="secondary" className="bg-muted/50 text-[10px] md:text-xs px-1.5 py-0.5">
-          {tag}
-        </Badge>
-      ))}
+            {tag}
+          </Badge>
+        ))}
     </div>
   </a>
-  );
+);
 };
 
 const Categories = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  
+
   // Redux state - using separate category page state
   const { 
     categoryPageItems: links, 
@@ -308,16 +308,16 @@ const Categories = () => {
             <div className="flex items-center gap-2 min-w-max">
               {sortedCategories.length > 0 ? (
                 sortedCategories.map((cat) => (
-                  <Button
-                    key={cat}
-                    variant={selectedCategory === cat ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedCategory(cat)}
-                    className={selectedCategory === cat
+                <Button
+                  key={cat}
+                  variant={selectedCategory === cat ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedCategory(cat)}
+                  className={selectedCategory === cat
                       ? "bg-primary/20 text-primary border-primary/30 hover:bg-primary/30 whitespace-nowrap flex items-center gap-1.5"
                       : "bg-card/50 border-border/50 backdrop-blur-xl hover:bg-card/80 whitespace-nowrap flex items-center gap-1.5"
-                    }
-                  >
+                  }
+                >
                     <span>{cat}</span>
                     <Badge 
                       variant="secondary" 
@@ -328,7 +328,7 @@ const Categories = () => {
                     >
                       {categoryPostCounts[cat] || 0}
                     </Badge>
-                  </Button>
+                </Button>
                 ))
               ) : (
                 <p className="text-sm text-muted-foreground">No categories available</p>

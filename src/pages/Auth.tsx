@@ -79,14 +79,21 @@ const Auth = () => {
             {/* Logo & Title */}
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-primary via-primary-light to-primary-dark flex items-center justify-center shadow-glow">
-                  <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                {/* Enhanced Large Logo with Dark Theme */}
+                <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155] flex items-center justify-center shadow-xl shadow-primary/30 overflow-hidden">
+                  {/* Animated background glow */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-primary-dark/15 opacity-70 animate-pulse"></div>
+                  
+                  {/* Link icon */}
+                  <svg className="relative z-10 w-9 h-9 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
                   </svg>
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/20 to-transparent opacity-40" />
+                  
+                  {/* Shine overlay */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-50"></div>
                 </div>
                 <div>
-                  <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                  <h1 className="font-display text-4xl font-bold bg-gradient-to-r from-foreground via-primary-light to-foreground bg-clip-text text-transparent tracking-tight">
                     LynkBin
                   </h1>
                   <p className="text-muted-foreground">Your Knowledge Hub</p>
@@ -138,14 +145,21 @@ const Auth = () => {
             {/* Mobile Logo */}
             <div className="md:hidden text-center mb-8">
               <div className="inline-flex items-center gap-3 mb-4">
-                <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-primary via-primary-light to-primary-dark flex items-center justify-center shadow-glow">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                {/* Enhanced Mobile Logo with Dark Theme */}
+                <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155] flex items-center justify-center shadow-xl shadow-primary/30 overflow-hidden">
+                  {/* Animated background glow */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-primary-dark/15 opacity-70"></div>
+                  
+                  {/* Link icon */}
+                  <svg className="relative z-10 w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
                   </svg>
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/20 to-transparent opacity-40" />
+                  
+                  {/* Shine overlay */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-50"></div>
                 </div>
               </div>
-              <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              <h1 className="font-display text-3xl font-bold bg-gradient-to-r from-foreground via-primary-light to-foreground bg-clip-text text-transparent tracking-tight">
                 LynkBin
               </h1>
               <p className="text-muted-foreground mt-1">Your Knowledge Hub</p>

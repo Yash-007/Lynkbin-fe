@@ -88,14 +88,21 @@ const HelpCenter = () => {
         {/* Welcome Section */}
         <div className="bg-gradient-to-br from-primary/10 via-accent-blue/10 to-primary/5 backdrop-blur-xl rounded-2xl p-6 border border-primary/30 mb-6">
           <div className="flex items-start gap-4">
-            <div className="relative flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary via-primary-light to-primary-dark flex items-center justify-center shadow-lg shadow-primary/30">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+            {/* Enhanced Logo Icon with Dark Theme */}
+            <div className="relative flex-shrink-0 w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155] flex items-center justify-center shadow-xl shadow-primary/20 overflow-hidden">
+              {/* Animated background glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary-dark/10 opacity-60"></div>
+              
+              {/* Link icon */}
+              <svg className="relative z-10 w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
               </svg>
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/20 to-transparent opacity-40"></div>
+              
+              {/* Shine overlay */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/0 via-white/5 to-white/0 opacity-50"></div>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-foreground mb-1">Welcome to LynkBin</h2>
+              <h2 className="font-display text-xl font-bold bg-gradient-to-r from-foreground via-primary-light to-foreground bg-clip-text text-transparent tracking-tight mb-1">Welcome to LynkBin</h2>
               <p className="text-sm text-muted-foreground">
                 Save, organize, and discover valuable links from social media. Quick answers below.
               </p>

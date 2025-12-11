@@ -81,20 +81,28 @@ const PasteBin = () => {
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <div className="flex items-center gap-3">
-                <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary via-primary-light to-primary-dark flex items-center justify-center shadow-lg shadow-primary/30">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                  </svg>
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/20 to-transparent opacity-40"></div>
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                    LynkBin
-                  </h1>
-                  <p className="text-[10px] text-muted-foreground -mt-0.5">Add New Link</p>
-                </div>
+            <div className="flex items-center gap-3 group cursor-pointer" onClick={() => navigate("/")}>
+              {/* Enhanced Logo Icon with Dark Theme */}
+              <div className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155] flex items-center justify-center shadow-xl shadow-primary/20 group-hover:shadow-primary/40 transition-all duration-300 overflow-hidden">
+                {/* Animated background glow */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary-dark/10 opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                {/* Link icon with animation */}
+                <svg className="relative z-10 w-6 h-6 text-primary group-hover:text-primary-light transition-all duration-300 group-hover:scale-110 group-hover:rotate-[-5deg]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                </svg>
+                
+                {/* Shine overlay */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-white/0 via-white/5 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
+              
+              <div>
+                <h1 className="font-display text-xl font-bold bg-gradient-to-r from-foreground via-primary-light to-foreground bg-clip-text text-transparent tracking-tight group-hover:from-primary group-hover:via-primary-light group-hover:to-primary transition-all duration-300">
+                  LynkBin
+                </h1>
+                <p className="text-[10px] text-muted-foreground -mt-0.5 group-hover:text-primary/70 transition-colors duration-300">Add New Link</p>
+              </div>
+            </div>
             </div>
             {/* Desktop - Profile Button */}
             <Button 
