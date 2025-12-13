@@ -28,17 +28,13 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error) => {
-    return Promise.reject(error);
+     throw new Error(error?.response?.data?.message || error?.message || "An unknown error occurred");
   }
 );
 
 // Response interceptor for error handling and format transformation
 apiClient.interceptors.response.use(
   (response) => {
-    // Extract data from backend's response format
-    if (response.data && typeof response.data === 'object' && 'success' in response.data) {
-      return response;
-    }
     return response;
   },
   (error) => {
@@ -48,7 +44,7 @@ apiClient.interceptors.response.use(
       localStorage.removeItem('user');
       window.location.href = '/';
     }
-    return Promise.reject(error);
+    throw new Error(error?.response?.data?.message || error?.message || "An unknown error occurred");
   }
 );
 
