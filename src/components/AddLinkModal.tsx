@@ -65,6 +65,11 @@ export const AddLinkModal = ({ open, onOpenChange }: AddLinkModalProps) => {
       toast.error("Please enter some notes");
       return;
     }
+    
+    if (!isUrl && notes.trim().length > 3500) {
+      toast.error("Notes cannot exceed 3500 characters");
+      return;
+    }
 
     // Close modal immediately
     onOpenChange(false);
@@ -179,9 +184,14 @@ export const AddLinkModal = ({ open, onOpenChange }: AddLinkModalProps) => {
             <TabsContent value="notes" className="space-y-4 mt-4">
               {/* Notes Input */}
               <div className="space-y-2">
-                <Label htmlFor="modal-notes" className="text-foreground text-sm">
-                  Your Notes
-                </Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="modal-notes" className="text-foreground text-sm">
+                    Your Notes
+                  </Label>
+                  <span className={`text-xs ${notes.length > 3500 ? 'text-destructive' : 'text-muted-foreground'}`}>
+                    {notes.length}/3500
+                  </span>
+                </div>
                 <Textarea
                   id="modal-notes"
                   placeholder="Write your thoughts, ideas, or any content you want to save..."
