@@ -81,8 +81,8 @@ export const AddLinkModal = ({ open, onOpenChange }: AddLinkModalProps) => {
 
     // Show loading toast with nice indicator and close icon
     const loadingMessage = isUrl 
-      ? "Your link will be saved in a few seconds..." 
-      : "Your notes will be saved in a few seconds...";
+      ? "Saving your link... Feel free to navigate away." 
+      : "Saving your notes... Feel free to navigate away.";
     
     toast.loading(loadingMessage, {
       id: 'saving-link',
