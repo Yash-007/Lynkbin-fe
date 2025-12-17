@@ -422,7 +422,7 @@ const Index = () => {
               </button>
             </div>
 
-            <div className="text-xs sm:text-sm">© 2024</div>
+            <div className="text-xs sm:text-sm">© 2025</div>
           </div>
         </div>
       </footer>

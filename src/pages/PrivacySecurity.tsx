@@ -144,7 +144,7 @@ const PrivacySecurity = () => {
             <Button
               size="sm"
               variant="outline"
-              onClick={() => window.location.href = 'mailto:support@lynkbin.com'}
+              onClick={() => window.location.href = 'mailto:yashagrawal.30.08@gmail.com'}
               className="bg-card/50 border-border/50 hover:bg-card/80"
             >
               Contact Us
