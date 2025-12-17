@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Filter, ArrowLeft, ExternalLink, Tag, Link as LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -185,22 +185,30 @@ const Categories = () => {
     dispatch(fetchCategoryPageData(selectedPlatform));
   }, [dispatch, selectedPlatform]);
 
-  // Count posts per category
-  const categoryPostCounts = availableCategories.reduce((acc, category) => {
-    const count = links.filter(link => link.category === category).length;
-    acc[category] = count;
-    return acc;
-  }, {} as Record<string, number>);
+  const categoryPostCounts = useMemo(() => {
+    return availableCategories.reduce((acc, category) => {
+      const count = links.filter(link => link.category === category).length;
+      acc[category] = count;
+      return acc;
+    }, {} as Record<string, number>);
+  }, [availableCategories, links]);
 
-  // Sort categories by post count (descending)
-  const sortedCategories = [...availableCategories].sort((a, b) => {
-    return (categoryPostCounts[b] || 0) - (categoryPostCounts[a] || 0);
-  });
 
-  // Set category to first one when categories are loaded and no category is selected
+  const sortedCategories = useMemo(() => {
+    return [...availableCategories].sort((a, b) => {
+      return (categoryPostCounts[b] || 0) - (categoryPostCounts[a] || 0);
+    });
+  }, [availableCategories, categoryPostCounts]);
+
+
   useEffect(() => {
     if (sortedCategories.length > 0) {
-      setSelectedCategory(sortedCategories[0]);
+      setSelectedCategory(prev => {
+        if (!prev || !sortedCategories.includes(prev)) {
+          return sortedCategories[0];
+        }
+        return prev;
+      });
     } else {
       setSelectedCategory("");
     }
