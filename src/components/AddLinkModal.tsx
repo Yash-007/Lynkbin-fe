@@ -91,7 +91,6 @@ export const AddLinkModal = ({ open, onOpenChange }: AddLinkModalProps) => {
     
     toast.loading(loadingMessage, {
       id: 'saving-link',
-      dismissible: true, // Shows X icon to close
     });
 
     // Process in background
