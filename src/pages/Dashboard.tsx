@@ -247,10 +247,10 @@ const Dashboard = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground">
-                    💡 Quick Tip: Save links instantly via Telegram
+                    💡 Quick Tip: Save links and notes instantly via Telegram
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Forward any link to @lynkbin_bot and it'll be saved to your vault
+                    Forward any link or note to @lynkbin_bot and it'll be saved to your vault
                   </p>
                 </div>
               </div>
