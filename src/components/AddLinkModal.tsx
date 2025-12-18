@@ -146,7 +146,7 @@ export const AddLinkModal = ({ open, onOpenChange }: AddLinkModalProps) => {
             Save Content
           </DialogTitle>
           <DialogDescription className="text-muted-foreground text-sm">
-            Save a link from LinkedIn/X or add your own notes
+            Save a link from any platform or add your own notes
           </DialogDescription>
         </DialogHeader>
 
