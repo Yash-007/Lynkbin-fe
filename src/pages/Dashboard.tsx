@@ -207,7 +207,7 @@ const Dashboard = () => {
                 className="bg-primary hover:bg-primary/90 shadow-blur"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add Link
+              Add Content
             </Button>
               <Button 
                 onClick={() => window.open('https://t.me/lynkbin_bot', '_blank')}
@@ -881,7 +881,7 @@ const Dashboard = () => {
         onAddLinkClick={() => setAddLinkModalOpen(true)}
       />
 
-      {/* Add Link Modal */}
+      {/* Add Content Modal */}
       <AddLinkModal open={addLinkModalOpen} onOpenChange={setAddLinkModalOpen} />
       
       {/* Notes Detail Modal */}

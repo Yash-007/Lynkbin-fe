@@ -386,7 +386,7 @@ const Categories = () => {
         onAddLinkClick={() => setAddLinkModalOpen(true)}
       />
 
-      {/* Add Link Modal */}
+      {/* Add Content Modal */}
       <AddLinkModal open={addLinkModalOpen} onOpenChange={setAddLinkModalOpen} />
       
       {/* Notes Detail Modal */}

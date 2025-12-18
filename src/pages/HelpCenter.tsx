@@ -55,8 +55,8 @@ const HelpCenter = () => {
           answer: "Links are auto-organized by platform, category, author, and tags. Use multi-select filters to find exactly what you need."
         },
         {
-          question: "Adding Links",
-          answer: "Three ways to save:\n• Telegram bot (fastest)\n• 'Add Link' button (manual)\n• Browser extension (coming soon)"
+          question: "Adding Content",
+          answer: "Three ways to save:\n• Telegram bot\n• 'Add Content' button\n• Browser extension (coming soon)"
         }
       ]
     }

@@ -131,7 +131,7 @@ export const MobileBottomNav = ({ activeTab, onTabChange, onAddLinkClick }: Mobi
           </Sheet>
 
 
-          {/* Add Link - Center */}
+          {/* Add Content - Center */}
           <button
             onClick={onAddLinkClick}
             className="flex items-center justify-center w-14 h-14 -mt-6 rounded-full bg-gradient-to-br from-primary via-primary-light to-primary-dark text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:scale-105 transition-all duration-300"

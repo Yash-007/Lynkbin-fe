@@ -239,7 +239,7 @@ const Profile = () => {
         onAddLinkClick={() => setAddLinkModalOpen(true)}
       />
 
-      {/* Add Link Modal */}
+      {/* Add Content Modal */}
       <AddLinkModal open={addLinkModalOpen} onOpenChange={setAddLinkModalOpen} />
     </div>
   );
