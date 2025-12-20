@@ -11,10 +11,12 @@ import Profile from "./pages/Profile";
 import HelpCenter from "./pages/HelpCenter";
 import PrivacySecurity from "./pages/PrivacySecurity";
 import NotFound from "./pages/NotFound";
+import { Analytics } from "@vercel/analytics/react"
 
 const queryClient = new QueryClient();
 
 const App = () => (
+  <div>
   <QueryClientProvider client={queryClient}>
     <Toaster />
     <Sonner />
@@ -32,6 +34,8 @@ const App = () => (
       </Routes>
     </BrowserRouter>
   </QueryClientProvider>
+  <Analytics />
+  </div>
 );
 
 export default App;
