@@ -91,6 +91,13 @@ export const AddLinkModal = ({ open, onOpenChange }: AddLinkModalProps) => {
     
     toast.loading(loadingMessage, {
       id: 'saving-link',
+      duration: Infinity,
+      dismissible: true,
+      closeButton: false,
+      action: {
+        label: 'Dismiss',
+        onClick: () => toast.dismiss('saving-link'),
+      },
     });
 
     // Process in background
