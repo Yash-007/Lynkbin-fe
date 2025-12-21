@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Filter, ArrowLeft, ExternalLink, Tag, Link as LinkIcon } from "lucide-react";
+import { Filter, ArrowLeft, ExternalLink, Tag, Link as LinkIcon, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
@@ -10,8 +10,19 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { 
   fetchCategoryPageData,
   setSelectedPlatform,
+  deletePost,
   LinkItem 
 } from "@/store/slices/linksSlice";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
 // Helper function to format date
@@ -102,6 +113,9 @@ const platformColors: Record<Platform, { bg: string; text: string; border: strin
 };
 
 const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note: LinkItem) => void }) => {
+  const dispatch = useAppDispatch();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   const handleClick = (e: React.MouseEvent) => {
     if (link.platform === "notes" && onNotesClick) {
       e.preventDefault();
@@ -109,14 +123,38 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await dispatch(deletePost(link.id)).unwrap();
+      toast.success("Post deleted successfully");
+      setDeleteDialogOpen(false);
+    } catch (error: any) {
+      toast.error(error || "Failed to delete post");
+    }
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDeleteDialogOpen(true);
+  };
+
   return (
-  <a
+    <>
+    <a
       href={link.platform === "notes" ? "#" : link.data}
       target={link.platform === "notes" ? undefined : "_blank"}
       rel={link.platform === "notes" ? undefined : "noopener noreferrer"}
       onClick={handleClick}
-    className="group block p-4 rounded-xl bg-card/50 border border-border/50 backdrop-blur-xl hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
-  >
+      className="group relative block p-4 rounded-xl bg-card/50 border border-border/50 backdrop-blur-xl hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+    >
+      <button
+        onClick={handleDeleteClick}
+        className="absolute top-2 right-2 z-10 p-1 rounded-md bg-background/40 backdrop-blur-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10 border border-border/30 hover:border-destructive/30 transition-all duration-200"
+        aria-label="Delete post"
+      >
+        <Trash2 className="w-3.5 h-3.5" />
+      </button>
     {/* Author and Date at the top */}
     <div className="flex items-center gap-2 mb-3">
       <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
@@ -150,6 +188,30 @@ const LinkCard = ({ link, onNotesClick }: { link: LinkItem; onNotesClick?: (note
         ))}
     </div>
   </a>
+
+  {/* Delete Confirmation Dialog */}
+  <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+    <AlertDialogContent className="bg-card/95 backdrop-blur-xl border-border/50">
+      <AlertDialogHeader>
+        <AlertDialogTitle className="text-foreground">Delete Post</AlertDialogTitle>
+        <AlertDialogDescription className="text-muted-foreground">
+          Are you sure you want to delete this post? This action cannot be undone.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel className="bg-card/50 border-border/50 hover:bg-card/80">
+          Cancel
+        </AlertDialogCancel>
+        <AlertDialogAction
+          onClick={handleDelete}
+          className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+        >
+          Delete
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+  </>
 );
 };
 

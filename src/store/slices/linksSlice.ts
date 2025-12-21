@@ -111,6 +111,18 @@ export const addLink = createAsyncThunk(
   }
 );
 
+export const deletePost = createAsyncThunk(
+  'links/deletePost',
+  async (postId: string, { rejectWithValue, getState }) => {
+    try {
+      await postsApi.deletePost(postId);
+      return postId;
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to delete post');
+    }
+  }
+);
+
 export const fetchAuthors = createAsyncThunk(
   'links/fetchAuthors',
   async (platform: string, { rejectWithValue }) => {
@@ -246,6 +258,19 @@ const linksSlice = createSlice({
     });
     builder.addCase(addLink.rejected, (state, action) => {
       state.isLoading = false;
+      state.error = action.payload as string;
+    });
+
+    // Delete post
+    builder.addCase(deletePost.pending, (state) => {
+      state.error = null;
+    });
+    builder.addCase(deletePost.fulfilled, (state, action) => {
+      const postId = action.payload;
+      state.items = state.items.filter(item => item.id !== postId);
+      state.categoryPageItems = state.categoryPageItems.filter(item => item.id !== postId);
+    });
+    builder.addCase(deletePost.rejected, (state, action) => {
       state.error = action.payload as string;
     });
 

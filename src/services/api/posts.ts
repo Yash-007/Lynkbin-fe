@@ -199,5 +199,20 @@ export const postsApi = {
       throw new Error('Failed to fetch stats');
     }
   },
+
+  // Delete a post
+  deletePost: async (postId: string): Promise<void> => {
+    try {
+      const response = await apiClient.delete<ApiResponse<void>>(`/posts/${postId}`);
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Failed to delete post');
+      }
+    } catch (error: any) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('Failed to delete post');
+    }
+  },
 };
 
