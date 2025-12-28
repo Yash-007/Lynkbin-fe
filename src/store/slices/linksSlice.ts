@@ -8,7 +8,7 @@ export interface LinkItem {
   data: string; // Contains URL for links or full text content for notes
   description: string; // AI-generated summary
   author: string;
-  platform: "linkedin" | "twitter" | "reddit" | /* "instagram" | "facebook" | */ "notes" | "others"; // Instagram and Facebook - Not supported yet
+  platform: "linkedin" | "twitter" | "reddit" | "instagram" | /* "facebook" | */ "notes" | "others"; // Facebook - Not supported yet
   tags: string[];
   category: string;
   savedAt: string; // Maps from backend's "created_at"

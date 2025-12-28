@@ -62,15 +62,15 @@ const formatDate = (dateString: string): string => {
 
 // No more mock data - using API data from Redux
 
-// Instagram and Facebook - Not supported yet
-const platforms = ["linkedin", "twitter", "reddit", /* "instagram", "facebook", */ "notes", "others"] as const;
+// Facebook - Not supported yet
+const platforms = ["linkedin", "twitter", "reddit", "instagram", /* "facebook", */ "notes", "others"] as const;
 type Platform = typeof platforms[number];
 
 const platformLabels: Record<Platform, string> = {
   linkedin: "LinkedIn",
   twitter: "X (Twitter)",
   reddit: "Reddit",
-  // instagram: "Instagram",
+  instagram: "Instagram",
   // facebook: "Facebook",
   notes: "Notes",
   others: "Others",
@@ -86,10 +86,10 @@ const platformIcons: Record<Platform, JSX.Element> = {
   reddit: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
     <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
   </svg>,
-  // Instagram and Facebook - Not supported yet
-  // instagram: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-  //   <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm4.25 4a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm4.5-2.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/>
-  // </svg>,
+  instagram: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm4.25 4a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm4.5-2.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/>
+  </svg>,
+  // Facebook - Not supported yet
   // facebook: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
   //   <path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/>
   // </svg>,
@@ -105,8 +105,8 @@ const platformColors: Record<Platform, { bg: string; text: string; border: strin
   linkedin: { bg: "bg-platform-linkedin/15", text: "text-platform-linkedin", border: "border-platform-linkedin/30" },
   twitter: { bg: "bg-platform-twitter/15", text: "text-platform-twitter", border: "border-platform-twitter/30" },
   reddit: { bg: "bg-platform-reddit/15", text: "text-platform-reddit", border: "border-platform-reddit/30" },
-  // Instagram and Facebook - Not supported yet
-  // instagram: { bg: "bg-platform-instagram/15", text: "text-platform-instagram", border: "border-platform-instagram/30" },
+  instagram: { bg: "bg-platform-instagram/15", text: "text-platform-instagram", border: "border-platform-instagram/30" },
+  // Facebook - Not supported yet
   // facebook: { bg: "bg-platform-facebook/15", text: "text-platform-facebook", border: "border-platform-facebook/30" },
   notes: { bg: "bg-blue-500/15", text: "text-blue-500", border: "border-blue-500/30" },
   others: { bg: "bg-gray-500/15", text: "text-gray-500", border: "border-gray-500/30" },
