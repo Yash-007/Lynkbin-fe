@@ -101,35 +101,42 @@ const Index = () => {
 
                 {/* Compact Preview Cards - Max width centered */}
                 <div className="space-y-3 max-w-md mx-auto">
-                  {/* LinkedIn */}
-                  <div className="group bg-gradient-to-br from-card via-card/95 to-card/90 backdrop-blur-xl rounded-xl p-3.5 border-l-[3px] border-platform-linkedin shadow-lg hover:shadow-xl transition-all">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-platform-linkedin/10 rounded-lg shrink-0">
-                        <svg className="w-5 h-5 text-platform-linkedin" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                        </svg>
+                  {/* LinkedIn & X Combined Card */}
+                  <div className="group bg-gradient-to-br from-card via-card/95 to-card/90 backdrop-blur-xl rounded-xl p-3.5 border-l-[3px] border-primary shadow-lg hover:shadow-xl transition-all">
+                    <div className="flex items-center gap-3 mb-2.5">
+                      <div className="flex -space-x-2">
+                        <div className="p-2 bg-platform-linkedin/10 rounded-lg ring-2 ring-background z-10">
+                          <svg className="w-5 h-5 text-platform-linkedin" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                          </svg>
+                        </div>
+                        <div className="p-2 bg-platform-twitter/10 rounded-lg ring-2 ring-background">
+                          <svg className="w-5 h-5 text-platform-twitter" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                          </svg>
+                        </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="text-sm font-semibold text-platform-linkedin block mb-0.5">LinkedIn</span>
+                        <span className="text-sm font-semibold text-foreground block mb-0.5">LinkedIn & X</span>
                         <p className="text-xs text-muted-foreground line-clamp-1">
-                          Professional posts & articles
+                          Posts, articles & threads
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* X/Twitter */}
-                  <div className="group bg-gradient-to-br from-card via-card/95 to-card/90 backdrop-blur-xl rounded-xl p-3.5 border-l-[3px] border-platform-twitter shadow-lg hover:shadow-xl transition-all">
+                  {/* Instagram Reels */}
+                  <div className="group bg-gradient-to-br from-card via-card/95 to-card/90 backdrop-blur-xl rounded-xl p-3.5 border-l-[3px] border-platform-instagram shadow-lg hover:shadow-xl transition-all">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-platform-twitter/10 rounded-lg shrink-0">
-                        <svg className="w-5 h-5 text-platform-twitter" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      <div className="p-2 bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] rounded-lg shrink-0">
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm4.25 4a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm4.5-2.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/>
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="text-sm font-semibold text-platform-twitter block mb-0.5">X / Twitter</span>
+                        <span className="text-sm font-semibold text-platform-instagram block mb-0.5">Instagram</span>
                         <p className="text-xs text-muted-foreground line-clamp-1">
-                          Threads & tweets
+                          Reels & posts
                         </p>
                       </div>
                     </div>
@@ -175,7 +182,7 @@ const Index = () => {
               {/* Desktop Description */}
               <div className="hidden lg:block space-y-3 text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl tracking-wide">
                 <p className="leading-relaxed">
-                  <span className="text-foreground font-medium">LinkedIn posts.</span> <span className="text-foreground font-medium">X threads.</span> <span className="text-foreground font-medium">Reddit discussions.</span>
+                  <span className="text-foreground font-medium">LinkedIn posts.</span> <span className="text-foreground font-medium">X threads.</span> <span className="text-foreground font-medium">Instagram reels.</span>
                 </p>
                 <p className="leading-relaxed">
                   <span className="text-foreground font-medium">Your notes.</span> <span className="text-foreground font-medium">Any link.</span>
@@ -219,13 +226,22 @@ const Index = () => {
 
             {/* Right: Visual Cards - Floating Layout */}
             <div className="relative h-[500px] md:h-[600px] hidden lg:block">
-              {/* Card 1 - LinkedIn */}
-              <div className="absolute top-0 right-0 w-80 bg-gradient-to-br from-card via-card to-card/80 backdrop-blur-xl rounded-2xl p-6 border-l-4 border-platform-linkedin shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-300">
+              {/* Card 1 - LinkedIn & X Combined */}
+              <div className="absolute top-0 right-0 w-80 bg-gradient-to-br from-card via-card to-card/80 backdrop-blur-xl rounded-2xl p-6 border-l-4 border-primary shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-300">
                 <div className="flex items-center gap-2 mb-3">
-                  <svg className="w-5 h-5 text-platform-linkedin" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                  </svg>
-                  <span className="text-sm font-semibold text-platform-linkedin">LinkedIn</span>
+                  <div className="flex -space-x-2">
+                    <div className="w-8 h-8 bg-platform-linkedin/10 rounded-lg flex items-center justify-center ring-2 ring-background z-10">
+                      <svg className="w-4 h-4 text-platform-linkedin" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                      </svg>
+                    </div>
+                    <div className="w-8 h-8 bg-platform-twitter/10 rounded-lg flex items-center justify-center ring-2 ring-background">
+                      <svg className="w-4 h-4 text-platform-twitter" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <span className="text-sm font-semibold text-foreground">LinkedIn & X</span>
                 </div>
                 <h3 className="font-bold text-foreground mb-2 line-clamp-2">
                   10 lessons from building a startup...
@@ -239,23 +255,25 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* Card 2 - X/Twitter */}
-              <div className="absolute top-32 left-0 w-72 bg-gradient-to-br from-card via-card to-card/80 backdrop-blur-xl rounded-2xl p-5 border-l-4 border-platform-twitter shadow-2xl -rotate-3 hover:rotate-0 transition-transform duration-300">
+              {/* Card 2 - Instagram Reels */}
+              <div className="absolute top-32 left-0 w-72 bg-gradient-to-br from-card via-card to-card/80 backdrop-blur-xl rounded-2xl p-5 border-l-4 border-platform-instagram shadow-2xl -rotate-3 hover:rotate-0 transition-transform duration-300">
                 <div className="flex items-center gap-2 mb-3">
-                  <svg className="w-4 h-4 text-platform-twitter" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                  </svg>
-                  <span className="text-sm font-semibold text-platform-twitter">X</span>
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm4.25 4a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm4.5-2.75a1 1 0 1 1 2 0 1 1 0 0 1-2 0z"/>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-semibold text-platform-instagram">Instagram</span>
                 </div>
                 <h3 className="font-bold text-foreground mb-2 line-clamp-2">
-                  Thread: How to write better code
+                  Creative design reels & inspiration
                 </h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  By @devmaster • Engineering
+                  By @designstudio • Visual Arts
                 </p>
                 <div className="flex gap-2 flex-wrap">
-                  <span className="text-xs px-2 py-1 rounded-md bg-primary/10 text-primary">Code</span>
-                  <span className="text-xs px-2 py-1 rounded-md bg-primary/10 text-primary">Tips</span>
+                  <span className="text-xs px-2 py-1 rounded-md bg-primary/10 text-primary">Design</span>
+                  <span className="text-xs px-2 py-1 rounded-md bg-primary/10 text-primary">Reels</span>
                 </div>
               </div>
 
